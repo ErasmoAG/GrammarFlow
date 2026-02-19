@@ -1,0 +1,136 @@
+[
+  {
+    "id": 1,
+    "category": "comida",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Yo como pizza",
+    "waves": [
+      {"correct": "I", "distractors": ["You", "She", "They"]},
+      {"correct": "eat", "distractors": ["eats", "eating", "ate"]},
+      {"correct": "pizza", "distractors": ["bread", "water", "apple"]}
+    ]
+  },
+  {
+    "id": 2,
+    "category": "comida",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Ella cocina pasta",
+    "waves": [
+      {"correct": "She", "distractors": ["He", "We", "I"]},
+      {"correct": "cooks", "distractors": ["cook", "cooking", "cooked"]},
+      {"correct": "pasta", "distractors": ["rice", "soup", "salad"]}
+    ]
+  },
+  {
+    "id": 3,
+    "category": "comida",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Nosotros bebemos agua",
+    "waves": [
+      {"correct": "We", "distractors": ["They", "He", "You"]},
+      {"correct": "drink", "distractors": ["drinks", "drank", "drinking"]},
+      {"correct": "water", "distractors": ["juice", "soda", "milk"]}
+    ]
+  },
+  {
+    "id": 4,
+    "category": "comida",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Él ama el pan",
+    "waves": [
+      {"correct": "He", "distractors": ["She", "I", "They"]},
+      {"correct": "loves", "distractors": ["love", "loving", "loved"]},
+      {"correct": "bread", "distractors": ["fruit", "meat", "cake"]}
+    ]
+  },
+  {
+    "id": 5,
+    "category": "comida",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Ellos compran fruta",
+    "waves": [
+      {"correct": "They", "distractors": ["We", "You", "He"]},
+      {"correct": "buy", "distractors": ["buys", "buying", "bought"]},
+      {"correct": "fruit", "distractors": ["candy", "fish", "eggs"]}
+    ]
+  },
+  {
+    "id": 6,
+    "category": "comida",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Tú cortas carne",
+    "waves": [
+      {"correct": "You", "distractors": ["I", "She", "It"]},
+      {"correct": "cut", "distractors": ["cuts", "cutting", "cute"]},
+      {"correct": "meat", "distractors": ["veg", "corn", "pie"]}
+    ]
+  }
+
+  ,
+  {
+    "id": 7,
+    "category": "separacion_residuos",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Yo reciclo papel",
+    "waves": [
+      {"correct": "I", "distractors": ["You", "They", "She"]},
+      {"correct": "recycle", "distractors": ["recycles", "recycling", "recycled"]},
+      {"correct": "paper", "distractors": ["plastic", "glass", "metal"]}
+    ]
+  },
+  {
+    "id": 8,
+    "category": "separacion_residuos",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Ella separa el plástico",
+    "waves": [
+      {"correct": "She", "distractors": ["He", "I", "We"]},
+      {"correct": "separates", "distractors": ["separate", "separating", "separated"]},
+      {"correct": "plastic", "distractors": ["paper", "glass", "metal"]}
+    ]
+  },
+  {
+    "id": 9,
+    "category": "separacion_residuos",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Nosotros reutilizamos bolsas",
+    "waves": [
+      {"correct": "We", "distractors": ["They", "He", "You"]},
+      {"correct": "reuse", "distractors": ["reuses", "reusing", "reused"]},
+      {"correct": "bags", "distractors": ["bottles", "cans", "boxes"]}
+    ]
+  },
+  {
+    "id": 10,
+    "category": "separacion_residuos",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Ellos tiran la basura",
+    "waves": [
+      {"correct": "They", "distractors": ["We", "He", "She"]},
+      {"correct": "throw", "distractors": ["throws", "throwing", "threw"]},
+      {"correct": "trash", "distractors": ["paper", "water", "food"]}
+    ]
+  },
+  {
+    "id": 11,
+    "category": "separacion_residuos",
+    "difficulty": "facil",
+    "tense": "presente_simple",
+    "spanish": "Tú limpias el vidrio",
+    "waves": [
+      {"correct": "You", "distractors": ["I", "She", "He"]},
+      {"correct": "clean", "distractors": ["cleans", "cleaning", "cleaned"]},
+      {"correct": "glass", "distractors": ["plastic", "metal", "paper"]}
+    ]
+  }
+]
