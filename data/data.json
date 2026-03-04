@@ -1,136 +1,1009 @@
 [
-  {
-    "id": 1,
-    "category": "comida",
-    "difficulty": "facil",
-    "tense": "presente_simple",
-    "spanish": "Yo como pizza",
-    "waves": [
-      {"correct": "I", "distractors": ["You", "She", "They"]},
-      {"correct": "eat", "distractors": ["eats", "eating", "ate"]},
-      {"correct": "pizza", "distractors": ["bread", "water", "apple"]}
-    ]
-  },
-  {
-    "id": 2,
-    "category": "comida",
-    "difficulty": "facil",
-    "tense": "presente_simple",
-    "spanish": "Ella cocina pasta",
-    "waves": [
-      {"correct": "She", "distractors": ["He", "We", "I"]},
-      {"correct": "cooks", "distractors": ["cook", "cooking", "cooked"]},
-      {"correct": "pasta", "distractors": ["rice", "soup", "salad"]}
-    ]
-  },
-  {
-    "id": 3,
-    "category": "comida",
-    "difficulty": "facil",
-    "tense": "presente_simple",
-    "spanish": "Nosotros bebemos agua",
-    "waves": [
-      {"correct": "We", "distractors": ["They", "He", "You"]},
-      {"correct": "drink", "distractors": ["drinks", "drank", "drinking"]},
-      {"correct": "water", "distractors": ["juice", "soda", "milk"]}
-    ]
-  },
-  {
-    "id": 4,
-    "category": "comida",
-    "difficulty": "facil",
-    "tense": "presente_simple",
-    "spanish": "Él ama el pan",
-    "waves": [
-      {"correct": "He", "distractors": ["She", "I", "They"]},
-      {"correct": "loves", "distractors": ["love", "loving", "loved"]},
-      {"correct": "bread", "distractors": ["fruit", "meat", "cake"]}
-    ]
-  },
-  {
-    "id": 5,
-    "category": "comida",
-    "difficulty": "facil",
-    "tense": "presente_simple",
-    "spanish": "Ellos compran fruta",
-    "waves": [
-      {"correct": "They", "distractors": ["We", "You", "He"]},
-      {"correct": "buy", "distractors": ["buys", "buying", "bought"]},
-      {"correct": "fruit", "distractors": ["candy", "fish", "eggs"]}
-    ]
-  },
-  {
-    "id": 6,
-    "category": "comida",
-    "difficulty": "facil",
-    "tense": "presente_simple",
-    "spanish": "Tú cortas carne",
-    "waves": [
-      {"correct": "You", "distractors": ["I", "She", "It"]},
-      {"correct": "cut", "distractors": ["cuts", "cutting", "cute"]},
-      {"correct": "meat", "distractors": ["veg", "corn", "pie"]}
-    ]
-  }
+{
+"id":1,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo como pizza",
+"waves":[
+{"correct":"I","distractors":["You","She","They"]},
+{"correct":"eat","distractors":["eats","eating","ate"]},
+{"correct":"pizza","distractors":["bread","salad","soup"]}
+]
+},
+{
+"id":2,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella cocina pasta",
+"waves":[
+{"correct":"She","distractors":["He","They","We"]},
+{"correct":"cooks","distractors":["cook","cooking","cooked"]},
+{"correct":"pasta","distractors":["rice","salad","bread"]}
+]
+},
+{
+"id":3,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros bebemos agua",
+"waves":[
+{"correct":"We","distractors":["They","He","You"]},
+{"correct":"drink","distractors":["drinks","drank","drinking"]},
+{"correct":"water","distractors":["juice","milk","tea"]}
+]
+},
+{
+"id":4,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Él ama el pan",
+"waves":[
+{"correct":"He","distractors":["She","I","They"]},
+{"correct":"loves","distractors":["love","loving","loved"]},
+{"correct":"bread","distractors":["cake","fruit","rice"]}
+]
+},
+{
+"id":5,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos compran fruta",
+"waves":[
+{"correct":"They","distractors":["We","You","He"]},
+{"correct":"buy","distractors":["buys","buying","bought"]},
+{"correct":"fruit","distractors":["meat","fish","eggs"]}
+]
+},
+{
+"id":6,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Tú cortas carne",
+"waves":[
+{"correct":"You","distractors":["I","She","They"]},
+{"correct":"cut","distractors":["cuts","cutting","cute"]},
+{"correct":"meat","distractors":["corn","bread","fish"]}
+]
+},
+{
+"id":7,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo preparo sopa",
+"waves":[
+{"correct":"I","distractors":["They","She","You"]},
+{"correct":"prepare","distractors":["prepares","preparing","prepared"]},
+{"correct":"soup","distractors":["salad","rice","bread"]}
+]
+},
+{
+"id":8,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella come arroz",
+"waves":[
+{"correct":"She","distractors":["He","They","I"]},
+{"correct":"eats","distractors":["eat","eating","ate"]},
+{"correct":"rice","distractors":["pasta","bread","meat"]}
+]
+},
+{
+"id":9,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros compramos verduras",
+"waves":[
+{"correct":"We","distractors":["They","He","You"]},
+{"correct":"buy","distractors":["buys","buying","bought"]},
+{"correct":"vegetables","distractors":["fruit","meat","bread"]}
+]
+},
+{
+"id":10,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos cocinan pollo",
+"waves":[
+{"correct":"They","distractors":["We","She","He"]},
+{"correct":"cook","distractors":["cooks","cooking","cooked"]},
+{"correct":"chicken","distractors":["fish","rice","soup"]}
+]
+},
+{
+"id":11,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Él bebe leche",
+"waves":[
+{"correct":"He","distractors":["She","They","I"]},
+{"correct":"drinks","distractors":["drink","drinking","drank"]},
+{"correct":"milk","distractors":["juice","water","tea"]}
+]
+},
+{
+"id":12,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo compro pan",
+"waves":[
+{"correct":"I","distractors":["She","They","You"]},
+{"correct":"buy","distractors":["buys","buying","bought"]},
+{"correct":"bread","distractors":["cake","fruit","rice"]}
+]
+},
+{
+"id":13,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella bebe jugo",
+"waves":[
+{"correct":"She","distractors":["He","We","They"]},
+{"correct":"drinks","distractors":["drink","drinking","drank"]},
+{"correct":"juice","distractors":["water","milk","tea"]}
+]
+},
+{
+"id":14,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros comemos ensalada",
+"waves":[
+{"correct":"We","distractors":["They","You","He"]},
+{"correct":"eat","distractors":["eats","eating","ate"]},
+{"correct":"salad","distractors":["rice","pasta","bread"]}
+]
+},
+{
+"id":15,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos preparan pescado",
+"waves":[
+{"correct":"They","distractors":["We","He","She"]},
+{"correct":"prepare","distractors":["prepares","preparing","prepared"]},
+{"correct":"fish","distractors":["chicken","rice","bread"]}
+]
+},
+{
+"id":16,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo bebo té",
+"waves":[
+{"correct":"I","distractors":["You","She","They"]},
+{"correct":"drink","distractors":["drinks","drank","drinking"]},
+{"correct":"tea","distractors":["coffee","milk","water"]}
+]
+},
+{
+"id":17,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella compra manzanas",
+"waves":[
+{"correct":"She","distractors":["He","We","They"]},
+{"correct":"buys","distractors":["buy","buying","bought"]},
+{"correct":"apples","distractors":["bananas","oranges","pears"]}
+]
+},
+{
+"id":18,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros cocinamos arroz",
+"waves":[
+{"correct":"We","distractors":["They","He","You"]},
+{"correct":"cook","distractors":["cooks","cooking","cooked"]},
+{"correct":"rice","distractors":["pasta","bread","soup"]}
+]
+},
+{
+"id":19,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos comen fruta",
+"waves":[
+{"correct":"They","distractors":["We","He","She"]},
+{"correct":"eat","distractors":["eats","eating","ate"]},
+{"correct":"fruit","distractors":["vegetables","bread","fish"]}
+]
+},
+{
+"id":20,
+"category":"comida",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Él prepara café",
+"waves":[
+{"correct":"He","distractors":["She","They","I"]},
+{"correct":"prepares","distractors":["prepare","preparing","prepared"]},
+{"correct":"coffee","distractors":["tea","milk","water"]}
+]
+},
 
-  ,
+
+
+
+{
+"id":21,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo reciclo papel",
+"waves":[
+{"correct":"I","distractors":["You","They","She"]},
+{"correct":"recycle","distractors":["recycles","recycling","recycled"]},
+{"correct":"paper","distractors":["plastic","glass","metal"]}
+]
+},
+{
+"id":22,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella separa plástico",
+"waves":[
+{"correct":"She","distractors":["He","They","We"]},
+{"correct":"separates","distractors":["separate","separating","separated"]},
+{"correct":"plastic","distractors":["paper","glass","metal"]}
+]
+},
+{
+"id":23,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros reciclamos vidrio",
+"waves":[
+{"correct":"We","distractors":["They","He","You"]},
+{"correct":"recycle","distractors":["recycles","recycling","recycled"]},
+{"correct":"glass","distractors":["plastic","paper","metal"]}
+]
+},
+{
+"id":24,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos tiran basura",
+"waves":[
+{"correct":"They","distractors":["We","She","He"]},
+{"correct":"throw","distractors":["throws","throwing","threw"]},
+{"correct":"trash","distractors":["paper","glass","plastic"]}
+]
+},
+{
+"id":25,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo limpio botellas",
+"waves":[
+{"correct":"I","distractors":["They","She","You"]},
+{"correct":"clean","distractors":["cleans","cleaning","cleaned"]},
+{"correct":"bottles","distractors":["bags","boxes","cans"]}
+]
+},
+{
+"id":26,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella reutiliza bolsas",
+"waves":[
+{"correct":"She","distractors":["He","They","We"]},
+{"correct":"reuses","distractors":["reuse","reusing","reused"]},
+{"correct":"bags","distractors":["bottles","boxes","cans"]}
+]
+},
+{
+"id":27,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros reciclamos latas",
+"waves":[
+{"correct":"We","distractors":["They","You","He"]},
+{"correct":"recycle","distractors":["recycles","recycling","recycled"]},
+{"correct":"cans","distractors":["bottles","boxes","bags"]}
+]
+},
+{
+"id":28,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos separan vidrio",
+"waves":[
+{"correct":"They","distractors":["We","He","She"]},
+{"correct":"separate","distractors":["separates","separating","separated"]},
+{"correct":"glass","distractors":["paper","plastic","metal"]}
+]
+},
+{
+"id":29,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo reciclo plástico",
+"waves":[
+{"correct":"I","distractors":["You","They","She"]},
+{"correct":"recycle","distractors":["recycles","recycling","recycled"]},
+{"correct":"plastic","distractors":["glass","paper","metal"]}
+]
+},
+{
+"id":30,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella limpia el vidrio",
+"waves":[
+{"correct":"She","distractors":["He","They","We"]},
+{"correct":"cleans","distractors":["clean","cleaning","cleaned"]},
+{"correct":"glass","distractors":["plastic","paper","metal"]}
+]
+},
+{
+"id":31,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros reutilizamos cajas",
+"waves":[
+{"correct":"We","distractors":["They","He","You"]},
+{"correct":"reuse","distractors":["reuses","reusing","reused"]},
+{"correct":"boxes","distractors":["bags","bottles","cans"]}
+]
+},
+{
+"id":32,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos reciclan papel",
+"waves":[
+{"correct":"They","distractors":["We","She","He"]},
+{"correct":"recycle","distractors":["recycles","recycling","recycled"]},
+{"correct":"paper","distractors":["plastic","glass","metal"]}
+]
+},
+{
+"id":33,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo separo metal",
+"waves":[
+{"correct":"I","distractors":["You","They","She"]},
+{"correct":"separate","distractors":["separates","separating","separated"]},
+{"correct":"metal","distractors":["glass","plastic","paper"]}
+]
+},
+{
+"id":34,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella recicla botellas",
+"waves":[
+{"correct":"She","distractors":["He","They","We"]},
+{"correct":"recycles","distractors":["recycle","recycling","recycled"]},
+{"correct":"bottles","distractors":["boxes","bags","cans"]}
+]
+},
+{
+"id":35,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros limpiamos latas",
+"waves":[
+{"correct":"We","distractors":["They","He","You"]},
+{"correct":"clean","distractors":["cleans","cleaning","cleaned"]},
+{"correct":"cans","distractors":["boxes","bags","bottles"]}
+]
+},
+{
+"id":36,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos reutilizan botellas",
+"waves":[
+{"correct":"They","distractors":["We","He","She"]},
+{"correct":"reuse","distractors":["reuses","reusing","reused"]},
+{"correct":"bottles","distractors":["boxes","bags","cans"]}
+]
+},
+{
+"id":37,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Yo tiro basura",
+"waves":[
+{"correct":"I","distractors":["You","They","She"]},
+{"correct":"throw","distractors":["throws","throwing","threw"]},
+{"correct":"trash","distractors":["plastic","glass","paper"]}
+]
+},
+{
+"id":38,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ella separa papel",
+"waves":[
+{"correct":"She","distractors":["He","They","We"]},
+{"correct":"separates","distractors":["separate","separating","separated"]},
+{"correct":"paper","distractors":["plastic","glass","metal"]}
+]
+},
+{
+"id":39,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Nosotros reciclamos plástico",
+"waves":[
+{"correct":"We","distractors":["They","He","You"]},
+{"correct":"recycle","distractors":["recycles","recycling","recycled"]},
+{"correct":"plastic","distractors":["glass","paper","metal"]}
+]
+},
+{
+"id":40,
+"category":"separacion_residuos",
+"difficulty":"facil",
+"tense":"presente_simple",
+"spanish":"Ellos limpian vidrio",
+"waves":[
+{"correct":"They","distractors":["We","He","She"]},
+{"correct":"clean","distractors":["cleans","cleaning","cleaned"]},
+{"correct":"glass","distractors":["plastic","paper","metal"]}
+]
+},
   {
-    "id": 7,
-    "category": "separacion_residuos",
-    "difficulty": "facil",
+    "id": 41,
+    "category": "comida",
+    "difficulty": "normal",
     "tense": "presente_simple",
-    "spanish": "Yo reciclo papel",
+    "spanish": "Yo preparo sopa hoy",
     "waves": [
-      {"correct": "I", "distractors": ["You", "They", "She"]},
+      {"correct": "I", "distractors": ["She", "They", "We"]},
+      {"correct": "prepare", "distractors": ["prepares", "preparing", "prepared"]},
+      {"correct": "soup", "distractors": ["salad", "rice", "bread"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 42,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ella come arroz ahora",
+    "waves": [
+      {"correct": "She", "distractors": ["I", "They", "We"]},
+      {"correct": "eats", "distractors": ["eat", "eating", "ate"]},
+      {"correct": "rice", "distractors": ["pasta", "bread", "meat"]},
+      {"correct": "now", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 43,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Nosotros bebemos agua en casa",
+    "waves": [
+      {"correct": "We", "distractors": ["He", "She", "They"]},
+      {"correct": "drink", "distractors": ["drinks", "drinking", "drank"]},
+      {"correct": "water", "distractors": ["juice", "milk", "tea"]},
+      {"correct": "at home", "distractors": ["at school", "at night", "every day"]}
+    ]
+  },
+  {
+    "id": 44,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos compran frutas cada día",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
+      {"correct": "buy", "distractors": ["buys", "buying", "bought"]},
+      {"correct": "fruit", "distractors": ["meat", "bread", "fish"]},
+      {"correct": "every day", "distractors": ["today", "yesterday", "tomorrow"]}
+    ]
+  },
+  {
+    "id": 45,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Él cocina pasta por la noche",
+    "waves": [
+      {"correct": "He", "distractors": ["They", "We", "I"]},
+      {"correct": "cooks", "distractors": ["cook", "cooking", "cooked"]},
+      {"correct": "pasta", "distractors": ["rice", "soup", "salad"]},
+      {"correct": "at night", "distractors": ["in the morning", "every day", "now"]}
+    ]
+  },
+  {
+    "id": 46,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Tú cortas verduras en la cocina",
+    "waves": [
+      {"correct": "You", "distractors": ["He", "She", "They"]},
+      {"correct": "cut", "distractors": ["cuts", "cutting", "cute"]},
+      {"correct": "vegetables", "distractors": ["fruit", "bread", "rice"]},
+      {"correct": "in the kitchen", "distractors": ["at school", "at night", "every day"]}
+    ]
+  },
+  {
+    "id": 47,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Yo compro pan en la tienda",
+    "waves": [
+      {"correct": "I", "distractors": ["She", "They", "We"]},
+      {"correct": "buy", "distractors": ["buys", "buying", "bought"]},
+      {"correct": "bread", "distractors": ["cake", "rice", "fruit"]},
+      {"correct": "at the store", "distractors": ["at home", "at night", "every day"]}
+    ]
+  },
+  {
+    "id": 48,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ella bebe jugo por la mañana",
+    "waves": [
+      {"correct": "She", "distractors": ["I", "They", "We"]},
+      {"correct": "drinks", "distractors": ["drink", "drinking", "drank"]},
+      {"correct": "juice", "distractors": ["water", "milk", "tea"]},
+      {"correct": "in the morning", "distractors": ["at night", "today", "every day"]}
+    ]
+  },
+  {
+    "id": 49,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Nosotros comemos ensalada en el almuerzo",
+    "waves": [
+      {"correct": "We", "distractors": ["He", "She", "They"]},
+      {"correct": "eat", "distractors": ["eats", "eating", "ate"]},
+      {"correct": "salad", "distractors": ["pasta", "bread", "soup"]},
+      {"correct": "at lunch", "distractors": ["at night", "now", "every day"]}
+    ]
+  },
+  {
+    "id": 50,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos preparan pescado hoy",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
+      {"correct": "prepare", "distractors": ["prepares", "preparing", "prepared"]},
+      {"correct": "fish", "distractors": ["chicken", "bread", "rice"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 51,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Él bebe café en la mañana",
+    "waves": [
+      {"correct": "He", "distractors": ["They", "We", "I"]},
+      {"correct": "drinks", "distractors": ["drink", "drinking", "drank"]},
+      {"correct": "coffee", "distractors": ["tea", "milk", "water"]},
+      {"correct": "in the morning", "distractors": ["at night", "now", "every day"]}
+    ]
+  },
+  {
+    "id": 52,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Yo como manzanas en casa",
+    "waves": [
+      {"correct": "I", "distractors": ["She", "They", "We"]},
+      {"correct": "eat", "distractors": ["eats", "eating", "ate"]},
+      {"correct": "apples", "distractors": ["bananas", "oranges", "pears"]},
+      {"correct": "at home", "distractors": ["at school", "today", "at night"]}
+    ]
+  },
+  {
+    "id": 53,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ella compra huevos en la tienda",
+    "waves": [
+      {"correct": "She", "distractors": ["I", "They", "We"]},
+      {"correct": "buys", "distractors": ["buy", "buying", "bought"]},
+      {"correct": "eggs", "distractors": ["fish", "bread", "fruit"]},
+      {"correct": "at the store", "distractors": ["at home", "at night", "every day"]}
+    ]
+  },
+  {
+    "id": 54,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Nosotros cocinamos pollo hoy",
+    "waves": [
+      {"correct": "We", "distractors": ["He", "She", "They"]},
+      {"correct": "cook", "distractors": ["cooks", "cooking", "cooked"]},
+      {"correct": "chicken", "distractors": ["fish", "rice", "soup"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 55,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos comen pan en el desayuno",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
+      {"correct": "eat", "distractors": ["eats", "eating", "ate"]},
+      {"correct": "bread", "distractors": ["rice", "pasta", "salad"]},
+      {"correct": "at breakfast", "distractors": ["at lunch", "at night", "now"]}
+    ]
+  },
+  {
+    "id": 56,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Tú preparas té ahora",
+    "waves": [
+      {"correct": "You", "distractors": ["He", "She", "They"]},
+      {"correct": "prepare", "distractors": ["prepares", "preparing", "prepared"]},
+      {"correct": "tea", "distractors": ["coffee", "milk", "water"]},
+      {"correct": "now", "distractors": ["today", "yesterday", "tomorrow"]}
+    ]
+  },
+  {
+    "id": 57,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Yo corto carne en la cocina",
+    "waves": [
+      {"correct": "I", "distractors": ["She", "They", "We"]},
+      {"correct": "cut", "distractors": ["cuts", "cutting", "cute"]},
+      {"correct": "meat", "distractors": ["fish", "bread", "corn"]},
+      {"correct": "in the kitchen", "distractors": ["at home", "at school", "every day"]}
+    ]
+  },
+  {
+    "id": 58,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ella prepara ensalada hoy",
+    "waves": [
+      {"correct": "She", "distractors": ["I", "They", "We"]},
+      {"correct": "prepares", "distractors": ["prepare", "preparing", "prepared"]},
+      {"correct": "salad", "distractors": ["soup", "rice", "bread"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 59,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Nosotros bebemos jugo en el almuerzo",
+    "waves": [
+      {"correct": "We", "distractors": ["He", "She", "They"]},
+      {"correct": "drink", "distractors": ["drinks", "drinking", "drank"]},
+      {"correct": "juice", "distractors": ["water", "milk", "tea"]},
+      {"correct": "at lunch", "distractors": ["at breakfast", "at night", "now"]}
+    ]
+  },
+  {
+    "id": 60,
+    "category": "comida",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos cocinan sopa en casa",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
+      {"correct": "cook", "distractors": ["cooks", "cooking", "cooked"]},
+      {"correct": "soup", "distractors": ["salad", "rice", "bread"]},
+      {"correct": "at home", "distractors": ["at the store", "today", "at night"]}
+    ]
+  },
+  
+  {
+    "id": 61,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Yo reciclo papel hoy",
+    "waves": [
+      {"correct": "I", "distractors": ["She", "They", "We"]},
       {"correct": "recycle", "distractors": ["recycles", "recycling", "recycled"]},
-      {"correct": "paper", "distractors": ["plastic", "glass", "metal"]}
+      {"correct": "paper", "distractors": ["plastic", "glass", "metal"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
     ]
   },
   {
-    "id": 8,
+    "id": 62,
     "category": "separacion_residuos",
-    "difficulty": "facil",
+    "difficulty": "normal",
     "tense": "presente_simple",
-    "spanish": "Ella separa el plástico",
+    "spanish": "Ella separa plástico en casa",
     "waves": [
-      {"correct": "She", "distractors": ["He", "I", "We"]},
+      {"correct": "She", "distractors": ["I", "They", "We"]},
       {"correct": "separates", "distractors": ["separate", "separating", "separated"]},
-      {"correct": "plastic", "distractors": ["paper", "glass", "metal"]}
+      {"correct": "plastic", "distractors": ["paper", "glass", "metal"]},
+      {"correct": "at home", "distractors": ["at school", "at night", "every day"]}
     ]
   },
   {
-    "id": 9,
+    "id": 63,
     "category": "separacion_residuos",
-    "difficulty": "facil",
+    "difficulty": "normal",
     "tense": "presente_simple",
-    "spanish": "Nosotros reutilizamos bolsas",
+    "spanish": "Nosotros reciclamos vidrio ahora",
     "waves": [
-      {"correct": "We", "distractors": ["They", "He", "You"]},
+      {"correct": "We", "distractors": ["He", "She", "They"]},
+      {"correct": "recycle", "distractors": ["recycles", "recycling", "recycled"]},
+      {"correct": "glass", "distractors": ["plastic", "paper", "metal"]},
+      {"correct": "now", "distractors": ["today", "yesterday", "tomorrow"]}
+    ]
+  },
+  {
+    "id": 64,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos reutilizan bolsas cada día",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
       {"correct": "reuse", "distractors": ["reuses", "reusing", "reused"]},
-      {"correct": "bags", "distractors": ["bottles", "cans", "boxes"]}
+      {"correct": "bags", "distractors": ["bottles", "boxes", "cans"]},
+      {"correct": "every day", "distractors": ["today", "yesterday", "tomorrow"]}
     ]
   },
   {
-    "id": 10,
+    "id": 65,
     "category": "separacion_residuos",
-    "difficulty": "facil",
+    "difficulty": "normal",
     "tense": "presente_simple",
-    "spanish": "Ellos tiran la basura",
+    "spanish": "Él limpia botellas en casa",
     "waves": [
-      {"correct": "They", "distractors": ["We", "He", "She"]},
+      {"correct": "He", "distractors": ["They", "We", "I"]},
+      {"correct": "cleans", "distractors": ["clean", "cleaning", "cleaned"]},
+      {"correct": "bottles", "distractors": ["bags", "boxes", "cans"]},
+      {"correct": "at home", "distractors": ["at school", "today", "at night"]}
+    ]
+  },
+  {
+    "id": 66,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Tú separas papel en la cocina",
+    "waves": [
+      {"correct": "You", "distractors": ["He", "She", "They"]},
+      {"correct": "separate", "distractors": ["separates", "separating", "separated"]},
+      {"correct": "paper", "distractors": ["plastic", "glass", "metal"]},
+      {"correct": "in the kitchen", "distractors": ["at home", "at school", "every day"]}
+    ]
+  },
+  {
+    "id": 67,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Yo tiro basura ahora",
+    "waves": [
+      {"correct": "I", "distractors": ["She", "They", "We"]},
       {"correct": "throw", "distractors": ["throws", "throwing", "threw"]},
-      {"correct": "trash", "distractors": ["paper", "water", "food"]}
+      {"correct": "trash", "distractors": ["paper", "glass", "plastic"]},
+      {"correct": "now", "distractors": ["today", "yesterday", "tomorrow"]}
     ]
   },
   {
-    "id": 11,
+    "id": 68,
     "category": "separacion_residuos",
-    "difficulty": "facil",
+    "difficulty": "normal",
     "tense": "presente_simple",
-    "spanish": "Tú limpias el vidrio",
+    "spanish": "Ella recicla latas hoy",
     "waves": [
-      {"correct": "You", "distractors": ["I", "She", "He"]},
+      {"correct": "She", "distractors": ["I", "They", "We"]},
+      {"correct": "recycles", "distractors": ["recycle", "recycling", "recycled"]},
+      {"correct": "cans", "distractors": ["bottles", "boxes", "bags"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 69,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Nosotros reutilizamos cajas en casa",
+    "waves": [
+      {"correct": "We", "distractors": ["He", "She", "They"]},
+      {"correct": "reuse", "distractors": ["reuses", "reusing", "reused"]},
+      {"correct": "boxes", "distractors": ["bags", "bottles", "cans"]},
+      {"correct": "at home", "distractors": ["at school", "today", "at night"]}
+    ]
+  },
+  {
+    "id": 70,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos limpian vidrio por la mañana",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
       {"correct": "clean", "distractors": ["cleans", "cleaning", "cleaned"]},
-      {"correct": "glass", "distractors": ["plastic", "metal", "paper"]}
+      {"correct": "glass", "distractors": ["plastic", "paper", "metal"]},
+      {"correct": "in the morning", "distractors": ["at night", "today", "every day"]}
+    ]
+  },
+  {
+    "id": 71,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Él separa metal hoy",
+    "waves": [
+      {"correct": "He", "distractors": ["They", "We", "I"]},
+      {"correct": "separates", "distractors": ["separate", "separating", "separated"]},
+      {"correct": "metal", "distractors": ["glass", "plastic", "paper"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 72,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Tú reciclas plástico en casa",
+    "waves": [
+      {"correct": "You", "distractors": ["He", "She", "They"]},
+      {"correct": "recycle", "distractors": ["recycles", "recycling", "recycled"]},
+      {"correct": "plastic", "distractors": ["glass", "paper", "metal"]},
+      {"correct": "at home", "distractors": ["at school", "today", "at night"]}
+    ]
+  },
+  {
+    "id": 73,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Yo limpio latas ahora",
+    "waves": [
+      {"correct": "I", "distractors": ["She", "They", "We"]},
+      {"correct": "clean", "distractors": ["cleans", "cleaning", "cleaned"]},
+      {"correct": "cans", "distractors": ["bottles", "boxes", "bags"]},
+      {"correct": "now", "distractors": ["today", "yesterday", "tomorrow"]}
+    ]
+  },
+  {
+    "id": 74,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ella reutiliza botellas cada día",
+    "waves": [
+      {"correct": "She", "distractors": ["I", "They", "We"]},
+      {"correct": "reuses", "distractors": ["reuse", "reusing", "reused"]},
+      {"correct": "bottles", "distractors": ["bags", "boxes", "cans"]},
+      {"correct": "every day", "distractors": ["today", "yesterday", "tomorrow"]}
+    ]
+  },
+  {
+    "id": 75,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Nosotros separamos vidrio en la cocina",
+    "waves": [
+      {"correct": "We", "distractors": ["He", "She", "They"]},
+      {"correct": "separate", "distractors": ["separates", "separating", "separated"]},
+      {"correct": "glass", "distractors": ["plastic", "paper", "metal"]},
+      {"correct": "in the kitchen", "distractors": ["at home", "at school", "every day"]}
+    ]
+  },
+  {
+    "id": 76,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos reciclan papel en casa",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
+      {"correct": "recycle", "distractors": ["recycles", "recycling", "recycled"]},
+      {"correct": "paper", "distractors": ["plastic", "glass", "metal"]},
+      {"correct": "at home", "distractors": ["at the store", "today", "at night"]}
+    ]
+  },
+  {
+    "id": 77,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Él tira basura por la noche",
+    "waves": [
+      {"correct": "He", "distractors": ["They", "We", "I"]},
+      {"correct": "throws", "distractors": ["throw", "throwing", "threw"]},
+      {"correct": "trash", "distractors": ["paper", "glass", "plastic"]},
+      {"correct": "at night", "distractors": ["in the morning", "today", "every day"]}
+    ]
+  },
+  {
+    "id": 78,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Tú limpias botellas hoy",
+    "waves": [
+      {"correct": "You", "distractors": ["He", "She", "They"]},
+      {"correct": "clean", "distractors": ["cleans", "cleaning", "cleaned"]},
+      {"correct": "bottles", "distractors": ["bags", "boxes", "cans"]},
+      {"correct": "today", "distractors": ["yesterday", "tomorrow", "later"]}
+    ]
+  },
+  {
+    "id": 79,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Yo separo plástico en casa",
+    "waves": [
+      {"correct": "I", "distractors": ["She", "They", "We"]},
+      {"correct": "separate", "distractors": ["separates", "separating", "separated"]},
+      {"correct": "plastic", "distractors": ["paper", "glass", "metal"]},
+      {"correct": "at home", "distractors": ["at school", "today", "at night"]}
+    ]
+  },
+  {
+    "id": 80,
+    "category": "separacion_residuos",
+    "difficulty": "normal",
+    "tense": "presente_simple",
+    "spanish": "Ellos reciclan vidrio cada día",
+    "waves": [
+      {"correct": "They", "distractors": ["He", "She", "I"]},
+      {"correct": "recycle", "distractors": ["recycles", "recycling", "recycled"]},
+      {"correct": "glass", "distractors": ["plastic", "paper", "metal"]},
+      {"correct": "every day", "distractors": ["today", "yesterday", "tomorrow"]}
     ]
   }
 ]
+
+

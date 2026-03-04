@@ -109,8 +109,14 @@ class GrammarGame(arcade.Window):
 
         self.current_sentences = [
             s for s in self.game_data
-            if s.get("tense") == tense and s.get("category") == category
+            if s.get("tense") == tense
+            and s.get("category") == category
+            and s.get("difficulty") == self.selected_difficulty
         ]
+
+        random.shuffle(self.current_sentences)
+
+        self.current_sentence_idx = 0
 
         self.current_sentence_idx = 0
         self.current_wave_idx = 0
@@ -464,6 +470,12 @@ class GrammarGame(arcade.Window):
         else:
             self.current_sentence_idx += 1
             self.current_wave_idx = 0
+
+            # ✅ si ya usamos todas las oraciones, volver a mezclar
+            if self.current_sentence_idx >= len(self.current_sentences):
+                random.shuffle(self.current_sentences)
+                self.current_sentence_idx = 0
+
             self.spawn_wave()
 
     def trigger_flash(self, is_success):
