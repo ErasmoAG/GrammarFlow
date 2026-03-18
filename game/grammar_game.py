@@ -299,7 +299,7 @@ class GrammarGame(arcade.Window):
         t2 = arcade.Text("FLOW",    0, 0, (60, 185, 195), title_size, bold=True)
         total_w = t1.content_width + t2.content_width
         tx = cx - total_w / 2
-        title_y = H * 0.72
+        title_y = H * 0.75
 
         arcade.draw_text("GRAMMAR", tx, title_y,
                          (25, 35, 75), title_size, bold=True)
@@ -310,34 +310,31 @@ class GrammarGame(arcade.Window):
         arcade.draw_text(
             "Domina el inglés al ritmo del juego",
             cx, title_y - title_size - 8,
-            (100, 110, 135), int(max(H * 0.025, 15)),
+            (100, 110, 135), int(max(H * 0.024, 14)),
             anchor_x="center"
         )
 
-        # ── Ilustración: mini carriles con círculos de colores ──
-        card_w = min(W * 0.26, 300)
-        card_h = card_w * 0.72
+        # ── Ilustración: mini carriles intercalados ──
+        card_w = min(W * 0.14, 165)
+        card_h = card_w * 0.90
         card_cx = cx
-        card_cy = H * 0.54
+        card_cy = H * 0.52
 
-        # Card blanca redondeada
-        _rr_fill(card_cx + 3, card_cy - 4, card_w + 6, card_h + 6, 22, (180, 190, 210, 50))
-        _rr_fill(card_cx, card_cy, card_w, card_h, 22, (255, 255, 255, 240))
+        # Card blanca
+        _rr_fill(card_cx, card_cy, card_w, card_h, 16, (255, 255, 255, 245))
 
-        # 4 mini carriles oscuros con círculo de color
         col_colors = [(60, 185, 195), (50, 200, 100), (230, 175, 45), (220, 70, 120)]
         n = 4
-        col_w  = card_w * 0.17
-        col_h  = card_h * 0.72
-        gap    = (card_w - n * col_w) / (n + 1)
-        dot_r  = col_w * 0.38
+        col_w = card_w * 0.16
+        col_h = card_h * 0.68
+        gap   = (card_w - n * col_w) / (n + 1)
+        dot_r = col_w * 0.38
 
         for i, c in enumerate(col_colors):
             lx = card_cx - card_w / 2 + gap + i * (col_w + gap) + col_w / 2
-            ly = card_cy + card_h * 0.06
-            # Columna oscura redondeada
+            offset = card_h * 0.06 if i % 2 == 0 else -card_h * 0.06
+            ly = card_cy + offset
             _rr_fill(lx, ly, col_w, col_h, col_w * 0.35, (30, 38, 65))
-            # Círculo de color abajo
             arcade.draw_circle_filled(lx, ly - col_h * 0.26, dot_r, c)
 
         # ── Botón JUGAR ──
@@ -349,22 +346,15 @@ class GrammarGame(arcade.Window):
                          (45, 35, 5), int(max(H * 0.030, 18)),
                          anchor_x="center", anchor_y="center", bold=True)
 
-        # ── Botón SALIR ──
+        # ── Botón SALIR (más pequeño) ──
         l2, r2, b2, t2 = self._start_btn_quit
-        bw2, bh2 = r2 - l2, t2 - b2
+        bw2 = (r2 - l2) * 0.65
+        bh2 = (t2 - b2) * 0.78
         bcx2, bcy2 = (l2 + r2) / 2, (b2 + t2) / 2
         _rr_fill(bcx2, bcy2, bw2, bh2, bh2 / 2, (155, 160, 175))
-        arcade.draw_text("→   SALIR", bcx2, bcy2,
-                         (255, 255, 255), int(max(H * 0.026, 16)),
+        arcade.draw_text("→  SALIR", bcx2, bcy2,
+                         (255, 255, 255), int(max(H * 0.022, 13)),
                          anchor_x="center", anchor_y="center", bold=True)
-
-        # ── Detalles decorativos ──
-        # Corazón rosa
-        arcade.draw_text("♥", W * 0.22, H * 0.86,
-                         (240, 130, 160), int(max(H * 0.036, 22)))
-        # Estrella dorada
-        arcade.draw_text("★", W * 0.72, H * 0.12,
-                         (230, 185, 60), int(max(H * 0.042, 26)))
 
     def draw_menu(self):
         W, H = self.width, self.height
