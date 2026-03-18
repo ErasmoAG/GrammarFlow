@@ -68,8 +68,13 @@ class GrammarGame(arcade.Window):
 
         self.score = 0
         self.combo = 0
-        self.lives = 6  # sobreescrito por apply_difficulty_settings()
+        self.lives = 6
         self.constructed_sentence = ""
+
+        # ── Tracking de partida ──
+        self.hits      = 0   # fases correctas
+        self.errors    = 0   # errores totales
+        self.max_combo = 0   # combo máximo alcanzado
 
         # ── Textos HUD cacheados (arcade.Text es ~10x más rápido que draw_text) ──
         self._txt_spanish  = arcade.Text("", 20, 0, (60, 70, 100), 18)
@@ -108,8 +113,11 @@ class GrammarGame(arcade.Window):
         self.start_button = None
         self.menu_back_button = None
         self.menu_y = {}
+        self._result_btn_back   = None
+        self._result_btn_retry  = None
 
         self._init_menu_layout()
+        self._init_result_buttons()
 
     # -------------------------
     # RESIZE
@@ -118,6 +126,7 @@ class GrammarGame(arcade.Window):
         super().on_resize(width, height)
         self._build_gradient_bg()
         self._init_start_buttons()
+        self._init_result_buttons()
         self._init_menu_layout()
 
     # -------------------------
@@ -165,6 +174,9 @@ class GrammarGame(arcade.Window):
         self.current_wave_idx = 0
         self.score = 0
         self.combo = 0
+        self.hits      = 0
+        self.errors    = 0
+        self.max_combo = 0
         # self.lives ya fue seteado por apply_difficulty_settings() al inicio de setup_game
         self.constructed_sentence = ""
         self.word_list = arcade.SpriteList()
@@ -540,43 +552,94 @@ class GrammarGame(arcade.Window):
         # ── 6. Partículas ──
         self.particle_system.draw()
 
+    def _init_result_buttons(self):
+        W, H = self.width, self.height
+        cx = W / 2
+        bw = max(int(W * 0.13), 155)
+        bh = max(int(H * 0.058), 44)
+        gap = max(int(W * 0.02), 16)
+        y_btn = H * 0.22
+        self._result_btn_back  = (cx - gap/2 - bw, cx - gap/2,      y_btn - bh/2, y_btn + bh/2)
+        self._result_btn_retry = (cx + gap/2,       cx + gap/2 + bw, y_btn - bh/2, y_btn + bh/2)
+
     def draw_gameover(self):
         W, H = self.width, self.height
-        cx, cy = W / 2, H / 2
+        cx = W / 2
 
-        arcade.draw_text(
-            "FIN DEL JUEGO",
-            cx, cy + 50,
-            (30, 40, 80),
-            30,
-            anchor_x="center",
-            bold=True
-        )
-        arcade.draw_text(
-            f"Puntaje Final: {self.score}",
-            cx, cy,
-            (70, 130, 200),
-            20,
-            anchor_x="center"
-        )
-        arcade.draw_text(
-            "Enter para Menú",
-            cx, cy - 60,
-            (120, 130, 160),
-            14,
-            anchor_x="center"
-        )
+        # ── Título ──
+        arcade.draw_text("GRAMMAR FLOW", cx, H * 0.88,
+                         (25, 35, 75), int(max(H * 0.045, 26)),
+                         anchor_x="center", bold=True)
+        arcade.draw_text("¡PARTIDA FINALIZADA!", cx, H * 0.81,
+                         (255, 255, 255), int(max(H * 0.022, 13)),
+                         anchor_x="center", bold=True)
+        # Pill de subtítulo
+        pill_w, pill_h = max(int(W * 0.22), 240), max(int(H * 0.038), 28)
+        _rr_fill(cx, H * 0.81, pill_w, pill_h, pill_h / 2, (70, 140, 215))
+        arcade.draw_text("¡PARTIDA FINALIZADA!", cx, H * 0.81,
+                         (255, 255, 255), int(max(H * 0.020, 12)),
+                         anchor_x="center", anchor_y="center", bold=True)
 
-        # Mensaje útil si se quedó sin data por filtro
-        if self.current_state == STATE_GAMEOVER and not self.current_sentences:
-            arcade.draw_text(
-                "No hay oraciones para esa selección.",
-                cx,
-                cy - 95,
-                arcade.color.ORANGE,
-                14,
-                anchor_x="center"
-            )
+        # ── Card blanca central ──
+        card_w = min(W * 0.50, 560)
+        card_h = H * 0.52
+        card_cy = H * 0.55
+        _rr_fill(cx, card_cy, card_w, card_h, 22, (255, 255, 255, 240))
+
+        # Puntaje grande
+        arcade.draw_text("TU PUNTUACIÓN", cx, card_cy + card_h * 0.36,
+                         (130, 135, 155), int(max(H * 0.018, 11)),
+                         anchor_x="center", bold=True)
+        arcade.draw_text(f"{self.score:,}", cx, card_cy + card_h * 0.18,
+                         (50, 190, 100), int(max(H * 0.075, 44)),
+                         anchor_x="center", bold=True)
+
+        # ── 3 stats: Aciertos / Errores / Combo máx ──
+        stat_y = card_cy - card_h * 0.08
+        stat_w = card_w * 0.25
+        stat_h = card_h * 0.28
+        stat_gap = card_w * 0.05
+        positions = [
+            cx - stat_w - stat_gap,
+            cx,
+            cx + stat_w + stat_gap,
+        ]
+        stat_data = [
+            ("ACIERTOS", str(self.hits),      (50, 190, 100)),
+            ("ERRORES",  str(self.errors),     (220, 80, 90)),
+            ("COMBO MÁX",f"x{self.max_combo}", (70, 140, 215)),
+        ]
+        for (sx, (label, value, color)) in zip(positions, stat_data):
+            _rr_fill(sx, stat_y, stat_w, stat_h, 12, (245, 246, 250))
+            arcade.draw_text(label, sx, stat_y + stat_h * 0.22,
+                             (150, 155, 170), int(max(H * 0.015, 10)),
+                             anchor_x="center", bold=True)
+            arcade.draw_text(value, sx, stat_y - stat_h * 0.08,
+                             color, int(max(H * 0.038, 22)),
+                             anchor_x="center", anchor_y="center", bold=True)
+
+        # ── Botones ──
+        self._init_result_buttons()
+
+        # Volver al menú (izquierda, gris)
+        if self._result_btn_back:
+            l, r, b, t = self._result_btn_back
+            bcx, bcy = (l+r)/2, (b+t)/2
+            bw, bh2 = r-l, t-b
+            _rr_fill(bcx, bcy, bw, bh2, bh2/2, (155, 160, 175))
+            arcade.draw_text("◀  Menú", bcx, bcy,
+                             (255, 255, 255), 14,
+                             anchor_x="center", anchor_y="center", bold=True)
+
+        # Reiniciar (derecha, dorado)
+        if self._result_btn_retry:
+            l, r, b, t = self._result_btn_retry
+            bcx, bcy = (l+r)/2, (b+t)/2
+            bw, bh2 = r-l, t-b
+            _rr_fill(bcx, bcy, bw, bh2, bh2/2, (240, 185, 40))
+            arcade.draw_text("Reiniciar  ▶", bcx, bcy,
+                             (40, 30, 10), 14,
+                             anchor_x="center", anchor_y="center", bold=True)
 
     # -------------------------
     # UPDATE / INPUT
@@ -605,6 +668,7 @@ class GrammarGame(arcade.Window):
 
         if wave_missed:
             self.lives -= 1
+            self.errors += 1
             self.combo = self.combo // 2
             self._update_speed_by_combo()
             self.trigger_flash(is_success=False)
@@ -634,6 +698,8 @@ class GrammarGame(arcade.Window):
 
         elif self.current_state == STATE_GAMEOVER:
             if key == arcade.key.ENTER:
+                self.setup_game(self.selected_tense, self.selected_theme)
+            elif key == arcade.key.ESCAPE:
                 self.current_state = STATE_MENU
 
         elif self.current_state == STATE_GAME:
@@ -657,6 +723,14 @@ class GrammarGame(arcade.Window):
                 self.current_state = STATE_MENU
             elif self._start_btn_quit and self._point_in_rect(x, y, self._start_btn_quit):
                 arcade.exit()
+            return
+
+        # Pantalla de resultados
+        if self.current_state == STATE_GAMEOVER:
+            if self._result_btn_back and self._point_in_rect(x, y, self._result_btn_back):
+                self.current_state = STATE_MENU
+            elif self._result_btn_retry and self._point_in_rect(x, y, self._result_btn_retry):
+                self.setup_game(self.selected_tense, self.selected_theme)
             return
 
         if self.current_state != STATE_MENU:
@@ -693,11 +767,13 @@ class GrammarGame(arcade.Window):
 
                     if word.is_correct:
                         self.score += 100
+                        self.hits += 1
                         self.trigger_flash(is_success=True)
                         self.advance_wave(word_chosen_text=word.text)
                     else:
                         self.score -= 50
                         self.lives -= 1
+                        self.errors += 1
                         self.combo = self.combo // 2
                         self._update_speed_by_combo()
                         self.trigger_flash(is_success=False)
@@ -711,6 +787,7 @@ class GrammarGame(arcade.Window):
         if not hit_something:
             self.score -= 10
             self.lives -= 1
+            self.errors += 1
             self.combo = self.combo // 2
             self._update_speed_by_combo()
             self.trigger_flash(is_success=False)
@@ -732,6 +809,8 @@ class GrammarGame(arcade.Window):
             bonus = 50 * self.combo
             self.score += bonus
             self._update_speed_by_combo()
+            if self.combo > self.max_combo:
+                self.max_combo = self.combo
 
             # Partículas en umbrales de combo
             if self.combo >= 3:
