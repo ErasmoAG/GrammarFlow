@@ -66,6 +66,13 @@ class GrammarGame(arcade.Window):
         self.lives = 6  # sobreescrito por apply_difficulty_settings()
         self.constructed_sentence = ""
 
+        # ── Textos HUD cacheados (arcade.Text es ~10x más rápido que draw_text) ──
+        self._txt_spanish  = arcade.Text("", 20, 0, (60, 70, 100), 18)
+        self._txt_english  = arcade.Text("", 20, 0, (70, 130, 200), 20, bold=True)
+        self._txt_score    = arcade.Text("", 0,  0, (70, 130, 200), 18)
+        self._txt_combo    = arcade.Text("", 0,  0, (180, 185, 200), 16, bold=False)
+        self._txt_lives    = arcade.Text("", 20, 0, (220, 80, 90),  18, bold=True)
+
         # Flash feedback
         self.flash_alpha = 0
         self.flash_color = arcade.color.GREEN
@@ -360,25 +367,20 @@ class GrammarGame(arcade.Window):
             lx1 = lane * lane_width + ox
             arcade.draw_lrbt_rectangle_filled(lx0, lx1, oy, H + oy, (*color, 18))
 
-        # ── 2. UI superior ──
+        # ── 2. UI superior — textos cacheados ──
         if self.current_sentence_idx < len(self.current_sentences):
             sentence_data = self.current_sentences[self.current_sentence_idx]
-            arcade.draw_text(
-                f"Español: {sentence_data['spanish']}",
-                20 + ox, H - 40 + oy,
-                (60, 70, 100), 18
-            )
-            arcade.draw_text(
-                f"Inglés: {self.constructed_sentence} ...",
-                20 + ox, H - 70 + oy,
-                (70, 130, 200), 20, bold=True
-            )
+            self._txt_spanish.text  = f"Español: {sentence_data['spanish']}"
+            self._txt_english.text  = f"Inglés: {self.constructed_sentence} ..."
+            self._txt_spanish.x = 20 + ox;  self._txt_spanish.y = H - 40 + oy
+            self._txt_english.x = 20 + ox;  self._txt_english.y = H - 70 + oy
+            self._txt_spanish.draw()
+            self._txt_english.draw()
 
-        arcade.draw_text(
-            f"Puntaje: {self.score}",
-            W - 220 + ox, H - 40 + oy,
-            (70, 130, 200), 18
-        )
+        self._txt_score.text = f"Puntaje: {self.score}"
+        self._txt_score.x = W - 220 + ox
+        self._txt_score.y = H - 40 + oy
+        self._txt_score.draw()
 
         if self.combo >= 6:
             combo_color = (210, 90, 60)
@@ -393,14 +395,17 @@ class GrammarGame(arcade.Window):
             combo_color = (180, 185, 200)
             combo_label = "COMBO x0"
 
-        arcade.draw_text(combo_label, W - 220 + ox, H - 70 + oy,
-                         combo_color, 16, bold=self.combo >= 3)
+        self._txt_combo.text  = combo_label
+        self._txt_combo.color = combo_color
+        self._txt_combo.bold  = self.combo >= 3
+        self._txt_combo.x = W - 220 + ox
+        self._txt_combo.y = H - 70 + oy
+        self._txt_combo.draw()
 
-        arcade.draw_text(
-            "Vidas: " + "❤" * self.lives,
-            20 + ox, H - 105 + oy,
-            (220, 80, 90), 18, bold=True
-        )
+        self._txt_lives.text = "Vidas: " + "❤" * self.lives
+        self._txt_lives.x = 20 + ox
+        self._txt_lives.y = H - 105 + oy
+        self._txt_lives.draw()
 
         # ── 3. Palabras cayendo ──
         for word in self.word_list:
