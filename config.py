@@ -15,5 +15,4 @@ HITBOX_Y = HITBOX_HEIGHT / 2
 # Velocidad (ajustada a 60fps usando delta_time)
 BASE_FALL_SPEED = 2
 
-# Vidas
-START_LIVES = 30
+# Vidas: definidas por dificultad en game/difficulty.py

@@ -5,7 +5,6 @@ from config import (
     SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE,
     LANES, LANE_WIDTH,   # LANE_WIDTH se mantiene importado por compatibilidad con FallingWord
     HITBOX_HEIGHT, HITBOX_Y,
-    START_LIVES,
     BASE_FALL_SPEED
 )
 
@@ -37,7 +36,7 @@ class GrammarGame(arcade.Window):
         self.current_wave_idx = 0
 
         self.score = 0
-        self.lives = START_LIVES
+        self.lives = 6  # sobreescrito por apply_difficulty_settings()
         self.constructed_sentence = ""
 
         # Flash feedback
@@ -73,30 +72,15 @@ class GrammarGame(arcade.Window):
     # -------------------------
     # DIFFICULTY HELPERS
     # -------------------------
-    def _difficulty_ui_to_settings_key(self) -> str:
-        """
-        Convierte tu ID de UI (facil/normal/dificil) a la llave que usa difficulty.py
-        """
-        mapping = {
-            "facil": "Easy",
-            "normal": "Normal",
-            "dificil": "Hard",
-        }
-        return mapping.get(self.selected_difficulty, "Easy")
-
     def apply_difficulty_settings(self):
         """
-        Aplica SOLO al iniciar la partida (cuando el jugador ya seleccionó en el menú).
-        Cambia gameplay REAL: velocidad y hitbox.
+        Aplica SOLO al iniciar la partida.
+        Delega completamente en difficulty.py como fuente de verdad.
         """
-        # Reset a base (Fácil)
-        self.fall_speed = self.base_fall_speed
-        self.hitbox_height = self.base_hitbox_height
-
-        # ✅ Actualización: Normal = +3% velocidad, hitbox -25%
-        if self.selected_difficulty == "normal":
-            self.fall_speed *= 1.70        # +70% velocidad
-            self.hitbox_height *= 0.75     # 25% más pequeña
+        settings = get_difficulty_settings(self.selected_difficulty)
+        self.fall_speed = self.base_fall_speed * settings.fall_speed_multiplier
+        self.hitbox_height = self.base_hitbox_height * settings.hitbox_scale
+        self.lives = settings.lives
 
     # -------------------------
     # GAME FLOW
@@ -117,11 +101,9 @@ class GrammarGame(arcade.Window):
         random.shuffle(self.current_sentences)
 
         self.current_sentence_idx = 0
-
-        self.current_sentence_idx = 0
         self.current_wave_idx = 0
         self.score = 0
-        self.lives = START_LIVES
+        # self.lives ya fue seteado por apply_difficulty_settings() al inicio de setup_game
         self.constructed_sentence = ""
         self.word_list = arcade.SpriteList()
 
