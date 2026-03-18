@@ -13,7 +13,28 @@ from config import (
 
 from utils.loader import load_data
 from game.states import STATE_START, STATE_MENU, STATE_GAME, STATE_GAMEOVER
-from game.falling_word import FallingWord
+from game.falling_word import FallingWord, LANE_COLORS, LANE_LETTERS
+
+
+def _rr_fill(cx, cy, w, h, r, color):
+    """Rounded rect filled — sin artefactos."""
+    r = min(r, w / 2, h / 2)
+    hw, hh = w / 2, h / 2
+    # Barra horizontal central
+    arcade.draw_lrbt_rectangle_filled(cx - hw, cx + hw, cy - hh + r, cy + hh - r, color)
+    # Barra vertical central
+    arcade.draw_lrbt_rectangle_filled(cx - hw + r, cx + hw - r, cy - hh, cy + hh, color)
+    # 4 esquinas circulares exactas
+    arcade.draw_circle_filled(cx - hw + r, cy - hh + r, r, color)
+    arcade.draw_circle_filled(cx + hw - r, cy - hh + r, r, color)
+    arcade.draw_circle_filled(cx - hw + r, cy + hh - r, r, color)
+    arcade.draw_circle_filled(cx + hw - r, cy + hh - r, r, color)
+
+
+def _rr_border(cx, cy, w, h, r, border_color, lw=2):
+    """Borde sólido: dibuja exterior (color borde) y luego interior (blanco puro)."""
+    _rr_fill(cx, cy, w + lw * 2, h + lw * 2, r + lw, border_color)
+    _rr_fill(cx, cy, w, h, r, (255, 255, 255))
 from game.difficulty import get_difficulty_settings
 from game.particles import ParticleSystem
 
@@ -268,52 +289,57 @@ class GrammarGame(arcade.Window):
         W, H = self.width, self.height
         cx = W / 2
 
-        # --- Título ---
-        arcade.draw_text(
-            "GrammarFlow",
-            cx,
-            H * 0.86,
-            arcade.color.WHITE,
-            int(max(H * 0.055, 28)),
-            anchor_x="center",
-            bold=True
-        )
+        # ── Card blanca grande y centrada ──
+        card_w = min(W * 0.82, 920)
+        card_h = H * 0.90
+        card_cx = cx
+        card_cy = H * 0.50
+
+        _rr_fill(card_cx, card_cy, card_w, card_h, 28, (255, 255, 255, 240))
+
+        # ── Título centrado ──
+        title_y = card_cy + card_h / 2 - card_h * 0.11
+        title_size = int(max(H * 0.055, 28))
+        # Medir ancho de "Grammar" para centrar el conjunto
+        t1 = arcade.Text("Grammar", 0, 0, (25, 35, 75), title_size, bold=True)
+        t2 = arcade.Text("Flow",    0, 0, (70, 145, 215), title_size, bold=True)
+        total_w = t1.content_width + t2.content_width
+        x_grammar = cx - total_w / 2
+
+        arcade.draw_text("Grammar", x_grammar, title_y,
+                         (25, 35, 75), title_size, bold=True)
+        arcade.draw_text("Flow", x_grammar + t1.content_width, title_y,
+                         (70, 145, 215), title_size, bold=True)
+
         arcade.draw_text(
             "CONFIGURACIÓN DE PARTIDA",
-            cx,
-            H * 0.81,
-            arcade.color.GRAY,
-            int(max(H * 0.018, 12)),
-            anchor_x="center",
+            cx, title_y - title_size - 6,
+            (175, 178, 192), int(max(H * 0.018, 11)),
+            anchor_x="center"
         )
 
-        # --- Labels alineados con filas reales ---
-        y_diff = self.menu_y.get("difficulty", H * 0.62)
-        y_tense = self.menu_y.get("tense", H * 0.42)
-        y_theme = self.menu_y.get("theme", H * 0.23)
+        # ── Labels todos en gris ──
+        y_diff  = self.menu_y.get("difficulty", H * 0.62)
+        y_tense = self.menu_y.get("tense",      H * 0.42)
+        y_theme = self.menu_y.get("theme",       H * 0.23)
 
-        label_size = int(max(H * 0.018, 12))
-        label_offset = int(max(H * 0.06, 38))
+        lsize = int(max(H * 0.018, 12))
+        loff  = int(max(H * 0.044, 28))
+        gray  = (110, 113, 130)
 
-        arcade.draw_text("DIFICULTAD", cx, y_diff + label_offset, arcade.color.GRAY, label_size, anchor_x="center")
-        arcade.draw_text("TIEMPO GRAMATICAL", cx, y_tense + label_offset, arcade.color.GRAY, label_size, anchor_x="center")
-        arcade.draw_text("TEMA", cx, y_theme + label_offset, arcade.color.GRAY, label_size, anchor_x="center")
+        for label, y in [("DIFICULTAD", y_diff), ("TIEMPO GRAMATICAL", y_tense), ("TEMA", y_theme)]:
+            arcade.draw_text(label, cx, y + loff, gray, lsize, anchor_x="center", bold=True)
 
-        # Botones de opciones
         for btn in self.menu_buttons:
             self._draw_button(btn)
 
-        # Botón empezar
         self._draw_start_button()
 
-        # Pie
         arcade.draw_text(
             "Disponible: Fácil/Normal • Presente • Comida / Separación de residuos",
-            cx,
-            H * 0.05,
-            arcade.color.GRAY,
-            int(max(H * 0.016, 11)),
-            anchor_x="center",
+            cx, card_cy - card_h / 2 + 14,
+            (185, 188, 200), int(max(H * 0.015, 10)),
+            anchor_x="center"
         )
 
     def draw_gameplay(self):
@@ -655,76 +681,48 @@ class GrammarGame(arcade.Window):
         W, H = self.width, self.height
         cx = W / 2
 
-        # Tamaños responsivos (mínimos para que no se rompa)
-        gap = max(int(W * 0.02), 14)
-        h_small = max(int(H * 0.05), 34)
-        h_big = max(int(H * 0.075), 52)
+        gap    = max(int(W * 0.016), 12)
+        h_pill = max(int(H * 0.038), 30)   # dificultad — pill pequeño
+        h_card = max(int(H * 0.055), 40)   # tense / theme — card mediana
+        w_diff = max(int(W * 0.11),  95)   # ancho pill dificultad
+        w_big  = max(int(W * 0.17), 150)   # ancho card tense/theme
 
-        w_diff = max(int(W * 0.14), 120)       # dificultad
-        w_big = max(int(W * 0.20), 180)        # tense / theme
-
-        # Filas centradas
-        y_diff = H * 0.62
-        y_tense = H * 0.42
-        y_theme = H * 0.23
+        y_diff  = H * 0.66
+        y_tense = H * 0.48
+        y_theme = H * 0.31
 
         self.menu_y["difficulty"] = y_diff
-        self.menu_y["tense"] = y_tense
-        self.menu_y["theme"] = y_theme
+        self.menu_y["tense"]      = y_tense
+        self.menu_y["theme"]      = y_theme
 
-        # Dificultad (Normal desbloqueado)
         diff_items = [
-            {"id": "facil", "label": "Fácil", "enabled": True},
-            {"id": "normal", "label": "Normal", "enabled": True},
+            {"id": "facil",   "label": "Fácil",   "enabled": True},
+            {"id": "normal",  "label": "Normal",  "enabled": True},
             {"id": "dificil", "label": "Difícil", "enabled": False},
         ]
-        self._add_row_buttons(
-            group="difficulty",
-            items=diff_items,
-            y=y_diff,
-            w=w_diff,
-            h=h_small,
-            gap=gap,
-            start_x=cx - (3 * w_diff + 2 * gap) / 2
-        )
+        self._add_row_buttons("difficulty", diff_items, y_diff, w_diff, h_pill, gap,
+                              cx - (3 * w_diff + 2 * gap) / 2)
 
-        # Tiempo gramatical
         tense_items = [
             {"id": "presente_simple", "label": "Presente", "enabled": True},
-            {"id": "pasado", "label": "Pasado", "enabled": False},
-            {"id": "futuro", "label": "Futuro", "enabled": False},
+            {"id": "pasado",          "label": "Pasado",   "enabled": False},
+            {"id": "futuro",          "label": "Futuro",   "enabled": False},
         ]
-        self._add_row_buttons(
-            group="tense",
-            items=tense_items,
-            y=y_tense,
-            w=w_big,
-            h=h_big,
-            gap=gap,
-            start_x=cx - (3 * w_big + 2 * gap) / 2
-        )
+        self._add_row_buttons("tense", tense_items, y_tense, w_big, h_card, gap,
+                              cx - (3 * w_big + 2 * gap) / 2)
 
-        # Tema (una fila, sin duplicados)
         theme_items = [
-            {"id": "comida", "label": "Comida", "enabled": True},
-            {"id": "separacion_residuos", "label": "Separación de residuos", "enabled": True},
-            {"id": "viajes", "label": "Viajes", "enabled": False},
+            {"id": "comida",             "label": "Comida",                 "enabled": True},
+            {"id": "separacion_residuos","label": "Sep. residuos",          "enabled": True},
+            {"id": "viajes",             "label": "Viajes",                 "enabled": False},
         ]
-        self._add_row_buttons(
-            group="theme",
-            items=theme_items,
-            y=y_theme,
-            w=w_big,
-            h=h_big,
-            gap=gap,
-            start_x=cx - (3 * w_big + 2 * gap) / 2
-        )
+        self._add_row_buttons("theme", theme_items, y_theme, w_big, h_card, gap,
+                              cx - (3 * w_big + 2 * gap) / 2)
 
-        # Botón empezar (siempre visible)
-        y_start = max(H * 0.10, y_theme - max(H * 0.16, 120))
-        w_start = max(int(W * 0.18), 220)
-        h_start = max(int(H * 0.07), 55)
-
+        # Botón empezar
+        y_start  = H * 0.14
+        w_start  = max(int(W * 0.16), 190)
+        h_start  = max(int(H * 0.058), 44)
         l = cx - w_start / 2
         r = cx + w_start / 2
         b = y_start - h_start / 2
@@ -770,39 +768,59 @@ class GrammarGame(arcade.Window):
 
     def _draw_button(self, btn):
         l, r, b, t = btn["rect"]
-        enabled = btn["enabled"]
+        cx = (l + r) / 2
+        cy = (b + t) / 2
+        w  = r - l
+        h  = t - b
+        enabled  = btn["enabled"]
         selected = (btn["id"] == self._get_selected_id(btn["group"]))
+        group    = btn["group"]
 
-        if enabled:
-            arcade.draw_lrbt_rectangle_filled(l, r, b, t, arcade.color.DARK_SLATE_GRAY)
+        if group == "difficulty":
+            radius = h / 2
+            if not enabled:
+                _rr_fill(cx, cy, w, h, radius, (235, 236, 240))
+                text_color = (190, 192, 200)
+            elif selected:
+                colors = {"facil": (50, 190, 100), "normal": (70, 140, 215), "dificil": (220, 80, 90)}
+                _rr_fill(cx, cy, w, h, radius, colors.get(btn["id"], (70, 140, 215)))
+                text_color = (255, 255, 255)
+            else:
+                colors = {"facil": (50, 190, 100), "normal": (70, 140, 215), "dificil": (220, 80, 90)}
+                c = colors.get(btn["id"], (160, 165, 185))
+                _rr_border(cx, cy, w, h, radius, c, lw=2)
+                text_color = c
         else:
-            arcade.draw_lrbt_rectangle_filled(l, r, b, t, arcade.color.DIM_GRAY)
-
-        border_color = arcade.color.CYAN if selected else arcade.color.LIGHT_GRAY
-        arcade.draw_lrbt_rectangle_outline(l, r, b, t, border_color, 2)
+            radius = 12
+            if not enabled:
+                _rr_fill(cx, cy, w, h, radius, (242, 243, 246))
+                text_color = (190, 192, 200)
+            elif selected:
+                _rr_border(cx, cy, w, h, radius, (70, 140, 215), lw=2)
+                text_color = (70, 140, 215)
+            else:
+                _rr_border(cx, cy, w, h, radius, (210, 213, 222), lw=2)
+                text_color = (80, 90, 115)
 
         label = btn["label"] + ("" if enabled else " 🔒")
         arcade.draw_text(
-            label,
-            (l + r) / 2,
-            (b + t) / 2,
-            arcade.color.WHITE,
-            14,
-            anchor_x="center",
-            anchor_y="center",
+            label, cx, cy, text_color, 15,
+            anchor_x="center", anchor_y="center",
+            bold=True
         )
 
     def _draw_start_button(self):
         l, r, b, t = self.start_button["rect"]
-        arcade.draw_lrbt_rectangle_filled(l, r, b, t, arcade.color.GOLD)
-        arcade.draw_lrbt_rectangle_outline(l, r, b, t, arcade.color.WHITE, 2)
+        cx = (l + r) / 2
+        cy = (b + t) / 2
+        w  = r - l
+        h  = t - b
+        radius = h / 2
+
+        _rr_fill(cx, cy, w, h, radius, (240, 185, 40))
         arcade.draw_text(
-            self.start_button["label"],
-            (l + r) / 2,
-            (b + t) / 2,
-            arcade.color.BLACK,
-            16,
-            anchor_x="center",
-            anchor_y="center",
+            "¡EMPEZAR!  ▶", cx, cy,
+            (40, 30, 10), 17,
+            anchor_x="center", anchor_y="center",
             bold=True
         )
