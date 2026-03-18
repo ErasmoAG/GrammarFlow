@@ -106,6 +106,7 @@ class GrammarGame(arcade.Window):
 
         self.menu_buttons = []
         self.start_button = None
+        self.menu_back_button = None
         self.menu_y = {}
 
         self._init_menu_layout()
@@ -672,6 +673,10 @@ class GrammarGame(arcade.Window):
         if self.start_button and self._point_in_rect(x, y, self.start_button["rect"]):
             self.setup_game(self.selected_tense, self.selected_theme)
 
+        # Click en menú principal
+        if self.menu_back_button and self._point_in_rect(x, y, self.menu_back_button["rect"]):
+            self.current_state = STATE_START
+
     # -------------------------
     # COLLISION / GAME LOGIC
     # -------------------------
@@ -798,12 +803,22 @@ class GrammarGame(arcade.Window):
         self._add_row_buttons("theme", theme_items, y_theme, w_big, h_card, gap,
                               cx - (3 * w_big + 2 * gap) / 2)
 
-        # Botón empezar
+        # Botones inferiores: "Menu Principal" (izq) y "¡EMPEZAR!" (der)
         y_start  = H * 0.14
-        w_start  = max(int(W * 0.16), 190)
         h_start  = max(int(H * 0.058), 44)
-        l = cx - w_start / 2
-        r = cx + w_start / 2
+        w_start  = max(int(W * 0.14), 170)
+        btn_gap  = max(int(W * 0.02), 16)
+
+        # Botón izquierdo: Menu Principal
+        l_menu = cx - btn_gap / 2 - w_start
+        r_menu = cx - btn_gap / 2
+        b_menu = y_start - h_start / 2
+        t_menu = y_start + h_start / 2
+        self.menu_back_button = {"rect": (l_menu, r_menu, b_menu, t_menu)}
+
+        # Botón derecho: Empezar
+        l = cx + btn_gap / 2
+        r = cx + btn_gap / 2 + w_start
         b = y_start - h_start / 2
         t = y_start + h_start / 2
         self.start_button = {"rect": (l, r, b, t), "label": "¡EMPEZAR!"}
@@ -889,17 +904,26 @@ class GrammarGame(arcade.Window):
         )
 
     def _draw_start_button(self):
-        l, r, b, t = self.start_button["rect"]
-        cx = (l + r) / 2
-        cy = (b + t) / 2
-        w  = r - l
-        h  = t - b
-        radius = h / 2
+        # ── Botón izquierdo: Menú Principal (gris, estilo SALIR) ──
+        if self.menu_back_button:
+            l, r, b, t = self.menu_back_button["rect"]
+            cx2 = (l + r) / 2;  cy2 = (b + t) / 2
+            w2 = r - l;          h2 = t - b
+            _rr_fill(cx2, cy2, w2, h2, h2 / 2, (155, 160, 175))
+            arcade.draw_text(
+                "◀  Menú", cx2, cy2,
+                (255, 255, 255), 15,
+                anchor_x="center", anchor_y="center", bold=True
+            )
 
-        _rr_fill(cx, cy, w, h, radius, (240, 185, 40))
-        arcade.draw_text(
-            "¡EMPEZAR!  ▶", cx, cy,
-            (40, 30, 10), 17,
-            anchor_x="center", anchor_y="center",
-            bold=True
-        )
+        # ── Botón derecho: ¡EMPEZAR! (dorado) ──
+        if self.start_button:
+            l, r, b, t = self.start_button["rect"]
+            cx = (l + r) / 2;  cy = (b + t) / 2
+            w  = r - l;         h  = t - b
+            _rr_fill(cx, cy, w, h, h / 2, (240, 185, 40))
+            arcade.draw_text(
+                "¡EMPEZAR!  ▶", cx, cy,
+                (40, 30, 10), 15,
+                anchor_x="center", anchor_y="center", bold=True
+            )
