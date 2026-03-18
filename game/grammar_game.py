@@ -1,6 +1,8 @@
 import arcade
 import random
 import math
+from PIL import Image
+import numpy as np
 
 from config import (
     SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE,
@@ -23,7 +25,10 @@ class GrammarGame(arcade.Window):
         # Pantalla completa por defecto (puedes quitarlo si quieres)
         self.set_fullscreen(True)
 
-        arcade.set_background_color(arcade.color.BLACK)
+        self.bg_sprite_list = None
+        self._build_gradient_bg()
+
+        arcade.set_background_color((225, 225, 240))
 
         # Inicia en pantalla de titulo
         self.current_state = STATE_START
@@ -77,6 +82,7 @@ class GrammarGame(arcade.Window):
     # -------------------------
     def on_resize(self, width, height):
         super().on_resize(width, height)
+        self._build_gradient_bg()
         self._init_menu_layout()
 
     # -------------------------
@@ -171,6 +177,9 @@ class GrammarGame(arcade.Window):
     def on_draw(self):
         self.clear()
 
+        # Degradado pastel simulado (esquinas semitransparentes sobre base)
+        self._draw_gradient_bg()
+
         # Calcular offset de shake para draw_gameplay
         if self.shake_frames > 0:
             self.shake_x = random.randint(-self.shake_magnitude, self.shake_magnitude)
@@ -193,24 +202,64 @@ class GrammarGame(arcade.Window):
             safe_color = (*self.flash_color[:3], int(self.flash_alpha))
             arcade.draw_lrbt_rectangle_filled(0, self.width, 0, self.height, safe_color)
 
+    def _build_gradient_bg(self):
+        """
+        Genera un gradiente pastel pixel-perfect con PIL y lo convierte a sprite de Arcade.
+        Esquina sup-izq: lavanda rosa → centro: blanco cremoso → inf-der: azul melocotón.
+        """
+        W, H = self.width, self.height
+        if W <= 0 or H <= 0:
+            return
+
+        # Colores de las 4 esquinas (R,G,B) — más vibrantes
+        tl = np.array([210, 175, 235], dtype=np.float32)   # lavanda rosa fuerte
+        tr = np.array([250, 200, 185], dtype=np.float32)   # melocotón vivo
+        bl = np.array([175, 215, 250], dtype=np.float32)   # azul cielo
+        br = np.array([185, 245, 225], dtype=np.float32)   # menta verde
+
+        xs = np.linspace(0, 1, W, dtype=np.float32)
+        ys = np.linspace(0, 1, H, dtype=np.float32)
+        xg, yg = np.meshgrid(xs, ys)
+
+        # Interpolación bilineal
+        r = ((1 - xg) * (1 - yg) * tl[0] + xg * (1 - yg) * tr[0] +
+             (1 - xg) * yg       * bl[0] + xg * yg       * br[0])
+        g = ((1 - xg) * (1 - yg) * tl[1] + xg * (1 - yg) * tr[1] +
+             (1 - xg) * yg       * bl[1] + xg * yg       * br[1])
+        b = ((1 - xg) * (1 - yg) * tl[2] + xg * (1 - yg) * tr[2] +
+             (1 - xg) * yg       * bl[2] + xg * yg       * br[2])
+
+        arr = np.stack([r, g, b], axis=2).astype(np.uint8)
+        img = Image.fromarray(arr, "RGB").transpose(Image.FLIP_TOP_BOTTOM).convert("RGBA")
+
+        tex = arcade.Texture(image=img)
+        sprite = arcade.Sprite()
+        sprite.texture = tex
+        sprite.center_x = W / 2
+        sprite.center_y = H / 2
+        self.bg_sprite_list = arcade.SpriteList()
+        self.bg_sprite_list.append(sprite)
+
+    def _draw_gradient_bg(self):
+        if self.bg_sprite_list:
+            self.bg_sprite_list.draw()
+
     def draw_start(self):
         W, H = self.width, self.height
         cx, cy = W / 2, H / 2
 
         arcade.draw_text(
             "GrammarFlow",
-            cx,
-            cy + H * 0.10,
-            arcade.color.WHITE,
+            cx, cy + H * 0.10,
+            (30, 40, 80),
             int(max(H * 0.07, 36)),
             anchor_x="center",
             bold=True
         )
         arcade.draw_text(
             "Presiona 1 o Enter para continuar",
-            cx,
-            cy,
-            arcade.color.GRAY,
+            cx, cy,
+            (120, 130, 160),
             int(max(H * 0.025, 16)),
             anchor_x="center"
         )
@@ -269,78 +318,130 @@ class GrammarGame(arcade.Window):
 
     def draw_gameplay(self):
         W, H = self.width, self.height
-        ox, oy = self.shake_x, self.shake_y  # offset de shake
+        ox, oy = self.shake_x, self.shake_y
 
-        # Separadores de carriles
         lane_width = W / LANES
+
+        # ── 1. Separadores de carriles + tinte de color por carril ──
+        from game.falling_word import LANE_COLORS, LANE_LETTERS
         for i in range(1, LANES):
             x = i * lane_width + ox
-            arcade.draw_line(x, oy, x, H + oy, arcade.color.DARK_GRAY, 1)
+            arcade.draw_line(x, oy, x, H + oy, (200, 200, 215, 120), 1)
 
-        # Hitbox
-        arcade.draw_lrbt_rectangle_outline(
-            10 + ox, W - 10 + ox,
-            HITBOX_Y - self.hitbox_height / 2 + oy,
-            HITBOX_Y + self.hitbox_height / 2 + oy,
-            arcade.color.MAGENTA, 3
-        )
+        for lane in range(1, LANES + 1):
+            color = LANE_COLORS[lane]
+            lx0 = (lane - 1) * lane_width + ox
+            lx1 = lane * lane_width + ox
+            arcade.draw_lrbt_rectangle_filled(lx0, lx1, oy, H + oy, (*color, 18))
 
-        # Texto de la oración
+        # ── 2. UI superior ──
         if self.current_sentence_idx < len(self.current_sentences):
             sentence_data = self.current_sentences[self.current_sentence_idx]
             arcade.draw_text(
                 f"Español: {sentence_data['spanish']}",
                 20 + ox, H - 40 + oy,
-                arcade.color.WHITE, 18
+                (60, 70, 100), 18
             )
             arcade.draw_text(
                 f"Inglés: {self.constructed_sentence} ...",
                 20 + ox, H - 70 + oy,
-                arcade.color.YELLOW, 20,
-                bold=True
+                (70, 130, 200), 20, bold=True
             )
 
-        # Score
         arcade.draw_text(
             f"Puntaje: {self.score}",
             W - 220 + ox, H - 40 + oy,
-            arcade.color.YELLOW, 18
+            (70, 130, 200), 18
         )
 
-        # Combo
         if self.combo >= 6:
-            combo_color = arcade.color.ORANGE
+            combo_color = (210, 90, 60)
             combo_label = f"🔥 COMBO x{self.combo}"
         elif self.combo >= 3:
-            combo_color = arcade.color.CYAN
+            combo_color = (70, 130, 200)
             combo_label = f"⚡ COMBO x{self.combo}"
         elif self.combo > 0:
-            combo_color = arcade.color.WHITE
+            combo_color = (80, 90, 120)
             combo_label = f"COMBO x{self.combo}"
         else:
-            combo_color = arcade.color.DARK_GRAY
+            combo_color = (180, 185, 200)
             combo_label = "COMBO x0"
 
-        arcade.draw_text(
-            combo_label,
-            W - 220 + ox, H - 70 + oy,
-            combo_color, 16,
-            bold=self.combo >= 3
-        )
+        arcade.draw_text(combo_label, W - 220 + ox, H - 70 + oy,
+                         combo_color, 16, bold=self.combo >= 3)
 
-        # Vidas
         arcade.draw_text(
             "Vidas: " + "❤" * self.lives,
             20 + ox, H - 105 + oy,
-            arcade.color.PINK, 18,
-            bold=True
+            (220, 80, 90), 18, bold=True
         )
 
-        # Palabras cayendo
+        # ── 3. Palabras cayendo ──
         for word in self.word_list:
             word.draw_text()
 
-        # Partículas de combo
+        # ── 4. Zona hitbox encima de las palabras ──
+        hx0 = 10 + ox
+        hx1 = W - 10 + ox
+        hy0 = HITBOX_Y - self.hitbox_height / 2 + oy
+        hy1 = HITBOX_Y + self.hitbox_height / 2 + oy
+        hcx = (hx0 + hx1) / 2
+        hcy = (hy0 + hy1) / 2
+        hw  = hx1 - hx0
+        hh  = hy1 - hy0
+
+        # Frosted glass: capas semitransparentes para simular blur
+        arcade.draw_lrbt_rectangle_filled(hx0, hx1, hy0, hy1, (255, 255, 255, 30))
+        arcade.draw_lrbt_rectangle_filled(hx0 + 4, hx1 - 4, hy0 + 4, hy1 - 4, (255, 255, 255, 35))
+        arcade.draw_lrbt_rectangle_filled(hx0 + 8, hx1 - 8, hy0 + 8, hy1 - 8, (255, 255, 255, 40))
+
+        # Sombra superior (borde difuminado arriba)
+        for i in range(8):
+            alpha = int(18 - i * 2)
+            arcade.draw_lrbt_rectangle_filled(
+                hx0, hx1,
+                hy1 - i, hy1 + 1,
+                (180, 190, 220, alpha)
+            )
+
+        # Línea punteada (borde de la zona)
+        dash_len, gap_len = 12, 7
+        # Top
+        x = hx0
+        while x < hx1:
+            arcade.draw_line(x, hy1, min(x + dash_len, hx1), hy1, (160, 170, 200, 160), 2)
+            x += dash_len + gap_len
+        # Bottom
+        x = hx0
+        while x < hx1:
+            arcade.draw_line(x, hy0, min(x + dash_len, hx1), hy0, (160, 170, 200, 160), 2)
+            x += dash_len + gap_len
+        # Left
+        y = hy0
+        while y < hy1:
+            arcade.draw_line(hx0, y, hx0, min(y + dash_len, hy1), (160, 170, 200, 160), 2)
+            y += dash_len + gap_len
+        # Right
+        y = hy0
+        while y < hy1:
+            arcade.draw_line(hx1, y, hx1, min(y + dash_len, hy1), (160, 170, 200, 160), 2)
+            y += dash_len + gap_len
+
+        # ── 5. Círculos A/B/X/Y encima de todo ──
+        circle_r = 26
+        circle_y = hcy
+        for lane in range(1, LANES + 1):
+            lx = (lane - 0.5) * lane_width + ox
+            color = LANE_COLORS[lane]
+            arcade.draw_circle_filled(lx, circle_y, circle_r, (*color, 230))
+            arcade.draw_circle_outline(lx, circle_y, circle_r, (255, 255, 255, 200), 3)
+            arcade.draw_text(
+                LANE_LETTERS[lane], lx, circle_y,
+                (255, 255, 255), 17,
+                anchor_x="center", anchor_y="center", bold=True
+            )
+
+        # ── 6. Partículas ──
         self.particle_system.draw()
 
     def draw_gameover(self):
@@ -349,25 +450,23 @@ class GrammarGame(arcade.Window):
 
         arcade.draw_text(
             "FIN DEL JUEGO",
-            cx,
-            cy + 50,
-            arcade.color.GREEN,
+            cx, cy + 50,
+            (30, 40, 80),
             30,
-            anchor_x="center"
+            anchor_x="center",
+            bold=True
         )
         arcade.draw_text(
             f"Puntaje Final: {self.score}",
-            cx,
-            cy,
-            arcade.color.WHITE,
+            cx, cy,
+            (70, 130, 200),
             20,
             anchor_x="center"
         )
         arcade.draw_text(
             "Enter para Menú",
-            cx,
-            cy - 60,
-            arcade.color.GRAY,
+            cx, cy - 60,
+            (120, 130, 160),
             14,
             anchor_x="center"
         )
