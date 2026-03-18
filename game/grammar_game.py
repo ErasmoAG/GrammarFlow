@@ -36,6 +36,7 @@ class GrammarGame(arcade.Window):
         self.current_wave_idx = 0
 
         self.score = 0
+        self.combo = 0
         self.lives = 6  # sobreescrito por apply_difficulty_settings()
         self.constructed_sentence = ""
 
@@ -82,6 +83,16 @@ class GrammarGame(arcade.Window):
         self.hitbox_height = self.base_hitbox_height * settings.hitbox_scale
         self.lives = settings.lives
 
+    def _update_speed_by_combo(self):
+        """
+        Recalcula fall_speed según dificultad + combo actual.
+        Incremento leve: +5% por nivel de combo sobre la velocidad base de dificultad.
+        Ej: combo 3 → ×1.15, combo 6 → ×1.30
+        """
+        settings = get_difficulty_settings(self.selected_difficulty)
+        base_speed = self.base_fall_speed * settings.fall_speed_multiplier
+        self.fall_speed = base_speed * (1 + self.combo * 0.05)
+
     # -------------------------
     # GAME FLOW
     # -------------------------
@@ -103,6 +114,7 @@ class GrammarGame(arcade.Window):
         self.current_sentence_idx = 0
         self.current_wave_idx = 0
         self.score = 0
+        self.combo = 0
         # self.lives ya fue seteado por apply_difficulty_settings() al inicio de setup_game
         self.constructed_sentence = ""
         self.word_list = arcade.SpriteList()
@@ -278,6 +290,29 @@ class GrammarGame(arcade.Window):
             18
         )
 
+        # Combo
+        if self.combo >= 6:
+            combo_color = arcade.color.ORANGE
+            combo_label = f"🔥 COMBO x{self.combo}"
+        elif self.combo >= 3:
+            combo_color = arcade.color.CYAN
+            combo_label = f"⚡ COMBO x{self.combo}"
+        elif self.combo > 0:
+            combo_color = arcade.color.WHITE
+            combo_label = f"COMBO x{self.combo}"
+        else:
+            combo_color = arcade.color.DARK_GRAY
+            combo_label = "COMBO x0"
+
+        arcade.draw_text(
+            combo_label,
+            W - 220,
+            H - 70,
+            combo_color,
+            16,
+            bold=self.combo >= 3
+        )
+
         # Vidas
         arcade.draw_text(
             "Vidas: " + "❤" * self.lives,
@@ -352,6 +387,8 @@ class GrammarGame(arcade.Window):
 
         if wave_missed:
             self.lives -= 1
+            self.combo = self.combo // 2
+            self._update_speed_by_combo()
             self.trigger_flash(is_success=False)
             if self.lives <= 0:
                 self.current_state = STATE_GAMEOVER
@@ -428,6 +465,8 @@ class GrammarGame(arcade.Window):
                     else:
                         self.score -= 50
                         self.lives -= 1
+                        self.combo = self.combo // 2
+                        self._update_speed_by_combo()
                         self.trigger_flash(is_success=False)
                         if self.lives <= 0:
                             self.current_state = STATE_GAMEOVER
@@ -438,6 +477,8 @@ class GrammarGame(arcade.Window):
         if not hit_something:
             self.score -= 10
             self.lives -= 1
+            self.combo = self.combo // 2
+            self._update_speed_by_combo()
             self.trigger_flash(is_success=False)
             if self.lives <= 0:
                 self.current_state = STATE_GAMEOVER
@@ -447,13 +488,20 @@ class GrammarGame(arcade.Window):
         sentence = self.current_sentences[self.current_sentence_idx]
 
         if self.current_wave_idx < len(sentence["waves"]) - 1:
+            # Todavía hay fases en esta oración → avanzar fase
             self.current_wave_idx += 1
             self.spawn_wave()
         else:
+            # ✅ Oración completa → subir combo y dar bonus
+            self.combo += 1
+            bonus = 50 * self.combo
+            self.score += bonus
+            self._update_speed_by_combo()
+
             self.current_sentence_idx += 1
             self.current_wave_idx = 0
 
-            # ✅ si ya usamos todas las oraciones, volver a mezclar
+            # Si ya usamos todas las oraciones, volver a mezclar
             if self.current_sentence_idx >= len(self.current_sentences):
                 random.shuffle(self.current_sentences)
                 self.current_sentence_idx = 0
