@@ -1,5 +1,6 @@
 import arcade
 import random
+import math
 
 from config import (
     SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE,
@@ -11,9 +12,8 @@ from config import (
 from utils.loader import load_data
 from game.states import STATE_START, STATE_MENU, STATE_GAME, STATE_GAMEOVER
 from game.falling_word import FallingWord
-
-# NUEVO: settings de dificultad (archivo limpio separado)
 from game.difficulty import get_difficulty_settings
+from game.particles import ParticleSystem
 
 
 class GrammarGame(arcade.Window):
@@ -43,6 +43,15 @@ class GrammarGame(arcade.Window):
         # Flash feedback
         self.flash_alpha = 0
         self.flash_color = arcade.color.GREEN
+
+        # Screen shake
+        self.shake_frames = 0       # frames restantes de shake
+        self.shake_magnitude = 8    # píxeles máx de desplazamiento
+        self.shake_x = 0
+        self.shake_y = 0
+
+        # Partículas
+        self.particle_system = ParticleSystem()
 
         # --- MENU CONFIG ---
         self.selected_difficulty = "facil"          # ids de UI
@@ -118,6 +127,7 @@ class GrammarGame(arcade.Window):
         # self.lives ya fue seteado por apply_difficulty_settings() al inicio de setup_game
         self.constructed_sentence = ""
         self.word_list = arcade.SpriteList()
+        self.particle_system.clear()
 
         # Si no hay oraciones, termina de forma clara (evita pantalla “vacía”)
         if not self.current_sentences:
@@ -160,6 +170,14 @@ class GrammarGame(arcade.Window):
     # -------------------------
     def on_draw(self):
         self.clear()
+
+        # Calcular offset de shake para draw_gameplay
+        if self.shake_frames > 0:
+            self.shake_x = random.randint(-self.shake_magnitude, self.shake_magnitude)
+            self.shake_y = random.randint(-self.shake_magnitude, self.shake_magnitude)
+        else:
+            self.shake_x = 0
+            self.shake_y = 0
 
         if self.current_state == STATE_START:
             self.draw_start()
@@ -251,18 +269,19 @@ class GrammarGame(arcade.Window):
 
     def draw_gameplay(self):
         W, H = self.width, self.height
+        ox, oy = self.shake_x, self.shake_y  # offset de shake
 
-        # Separadores de carriles (RESPONSIVO)
+        # Separadores de carriles
         lane_width = W / LANES
         for i in range(1, LANES):
-            x = i * lane_width
-            arcade.draw_line(x, 0, x, H, arcade.color.DARK_GRAY, 1)
+            x = i * lane_width + ox
+            arcade.draw_line(x, oy, x, H + oy, arcade.color.DARK_GRAY, 1)
 
-        # ✅ Hitbox real: ahora usa self.hitbox_height
+        # Hitbox
         arcade.draw_lrbt_rectangle_outline(
-            10, W - 10,
-            HITBOX_Y - self.hitbox_height / 2,
-            HITBOX_Y + self.hitbox_height / 2,
+            10 + ox, W - 10 + ox,
+            HITBOX_Y - self.hitbox_height / 2 + oy,
+            HITBOX_Y + self.hitbox_height / 2 + oy,
             arcade.color.MAGENTA, 3
         )
 
@@ -271,23 +290,21 @@ class GrammarGame(arcade.Window):
             sentence_data = self.current_sentences[self.current_sentence_idx]
             arcade.draw_text(
                 f"Español: {sentence_data['spanish']}",
-                20, H - 40,
+                20 + ox, H - 40 + oy,
                 arcade.color.WHITE, 18
             )
             arcade.draw_text(
                 f"Inglés: {self.constructed_sentence} ...",
-                20, H - 70,
+                20 + ox, H - 70 + oy,
                 arcade.color.YELLOW, 20,
                 bold=True
             )
 
-        # Score (RESPONSIVO)
+        # Score
         arcade.draw_text(
             f"Puntaje: {self.score}",
-            W - 220,
-            H - 40,
-            arcade.color.YELLOW,
-            18
+            W - 220 + ox, H - 40 + oy,
+            arcade.color.YELLOW, 18
         )
 
         # Combo
@@ -306,26 +323,25 @@ class GrammarGame(arcade.Window):
 
         arcade.draw_text(
             combo_label,
-            W - 220,
-            H - 70,
-            combo_color,
-            16,
+            W - 220 + ox, H - 70 + oy,
+            combo_color, 16,
             bold=self.combo >= 3
         )
 
         # Vidas
         arcade.draw_text(
             "Vidas: " + "❤" * self.lives,
-            20,
-            H - 105,
-            arcade.color.PINK,
-            18,
+            20 + ox, H - 105 + oy,
+            arcade.color.PINK, 18,
             bold=True
         )
 
-        # Dibujo de palabras
+        # Palabras cayendo
         for word in self.word_list:
             word.draw_text()
+
+        # Partículas de combo
+        self.particle_system.draw()
 
     def draw_gameover(self):
         W, H = self.width, self.height
@@ -374,6 +390,13 @@ class GrammarGame(arcade.Window):
         if self.flash_alpha > 0:
             self.flash_alpha -= 10
 
+        # Decaer shake
+        if self.shake_frames > 0:
+            self.shake_frames -= 1
+
+        # Actualizar partículas
+        self.particle_system.update()
+
         if self.current_state != STATE_GAME:
             return
 
@@ -390,6 +413,7 @@ class GrammarGame(arcade.Window):
             self.combo = self.combo // 2
             self._update_speed_by_combo()
             self.trigger_flash(is_success=False)
+            self.trigger_shake()
             if self.lives <= 0:
                 self.current_state = STATE_GAMEOVER
                 return
@@ -468,6 +492,7 @@ class GrammarGame(arcade.Window):
                         self.combo = self.combo // 2
                         self._update_speed_by_combo()
                         self.trigger_flash(is_success=False)
+                        self.trigger_shake()
                         if self.lives <= 0:
                             self.current_state = STATE_GAMEOVER
                             return
@@ -480,6 +505,7 @@ class GrammarGame(arcade.Window):
             self.combo = self.combo // 2
             self._update_speed_by_combo()
             self.trigger_flash(is_success=False)
+            self.trigger_shake()
             if self.lives <= 0:
                 self.current_state = STATE_GAMEOVER
 
@@ -498,6 +524,10 @@ class GrammarGame(arcade.Window):
             self.score += bonus
             self._update_speed_by_combo()
 
+            # Partículas en umbrales de combo
+            if self.combo >= 3:
+                self.particle_system.spawn(self.combo, self.width, HITBOX_Y)
+
             self.current_sentence_idx += 1
             self.current_wave_idx = 0
 
@@ -511,6 +541,10 @@ class GrammarGame(arcade.Window):
     def trigger_flash(self, is_success):
         self.flash_alpha = 150
         self.flash_color = arcade.color.NEON_GREEN if is_success else arcade.color.RED
+
+    def trigger_shake(self):
+        """Activa el screen shake por 8 frames."""
+        self.shake_frames = 8
 
     # -------------------------
     # MENU UI HELPERS
