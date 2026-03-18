@@ -49,6 +49,11 @@ class GrammarGame(arcade.Window):
         self.bg_sprite_list = None
         self._build_gradient_bg()
 
+        # Botones de pantalla de inicio (se calculan en on_resize también)
+        self._start_btn_play = None
+        self._start_btn_quit = None
+        self._init_start_buttons()
+
         arcade.set_background_color((225, 225, 240))
 
         # Inicia en pantalla de titulo
@@ -111,6 +116,7 @@ class GrammarGame(arcade.Window):
     def on_resize(self, width, height):
         super().on_resize(width, height)
         self._build_gradient_bg()
+        self._init_start_buttons()
         self._init_menu_layout()
 
     # -------------------------
@@ -272,25 +278,93 @@ class GrammarGame(arcade.Window):
         if self.bg_sprite_list:
             self.bg_sprite_list.draw()
 
+    def _init_start_buttons(self):
+        W, H = self.width, self.height
+        cx = W / 2
+        bw = min(int(W * 0.28), 340)
+        bh = max(int(H * 0.075), 54)
+        r = bh / 2
+        y_play = H * 0.34
+        y_quit = H * 0.22
+        self._start_btn_play = (cx - bw/2, cx + bw/2, y_play - bh/2, y_play + bh/2)
+        self._start_btn_quit = (cx - bw/2, cx + bw/2, y_quit - bh/2, y_quit + bh/2)
+
     def draw_start(self):
         W, H = self.width, self.height
-        cx, cy = W / 2, H / 2
+        cx = W / 2
 
+        # ── Título grande bicolor ──
+        title_size = int(max(H * 0.088, 48))
+        t1 = arcade.Text("GRAMMAR", 0, 0, (25, 35, 75),  title_size, bold=True)
+        t2 = arcade.Text("FLOW",    0, 0, (60, 185, 195), title_size, bold=True)
+        total_w = t1.content_width + t2.content_width
+        tx = cx - total_w / 2
+        title_y = H * 0.72
+
+        arcade.draw_text("GRAMMAR", tx, title_y,
+                         (25, 35, 75), title_size, bold=True)
+        arcade.draw_text("FLOW", tx + t1.content_width, title_y,
+                         (60, 185, 195), title_size, bold=True)
+
+        # Subtítulo
         arcade.draw_text(
-            "GrammarFlow",
-            cx, cy + H * 0.10,
-            (30, 40, 80),
-            int(max(H * 0.07, 36)),
-            anchor_x="center",
-            bold=True
-        )
-        arcade.draw_text(
-            "Presiona 1 o Enter para continuar",
-            cx, cy,
-            (120, 130, 160),
-            int(max(H * 0.025, 16)),
+            "Domina el inglés al ritmo del juego",
+            cx, title_y - title_size - 8,
+            (100, 110, 135), int(max(H * 0.025, 15)),
             anchor_x="center"
         )
+
+        # ── Ilustración: mini carriles con círculos de colores ──
+        card_w = min(W * 0.26, 300)
+        card_h = card_w * 0.72
+        card_cx = cx
+        card_cy = H * 0.54
+
+        # Card blanca redondeada
+        _rr_fill(card_cx + 3, card_cy - 4, card_w + 6, card_h + 6, 22, (180, 190, 210, 50))
+        _rr_fill(card_cx, card_cy, card_w, card_h, 22, (255, 255, 255, 240))
+
+        # 4 mini carriles oscuros con círculo de color
+        col_colors = [(60, 185, 195), (50, 200, 100), (230, 175, 45), (220, 70, 120)]
+        n = 4
+        col_w  = card_w * 0.17
+        col_h  = card_h * 0.72
+        gap    = (card_w - n * col_w) / (n + 1)
+        dot_r  = col_w * 0.38
+
+        for i, c in enumerate(col_colors):
+            lx = card_cx - card_w / 2 + gap + i * (col_w + gap) + col_w / 2
+            ly = card_cy + card_h * 0.06
+            # Columna oscura redondeada
+            _rr_fill(lx, ly, col_w, col_h, col_w * 0.35, (30, 38, 65))
+            # Círculo de color abajo
+            arcade.draw_circle_filled(lx, ly - col_h * 0.26, dot_r, c)
+
+        # ── Botón JUGAR ──
+        l, r, b, t = self._start_btn_play
+        bw, bh = r - l, t - b
+        bcx, bcy = (l + r) / 2, (b + t) / 2
+        _rr_fill(bcx, bcy, bw, bh, bh / 2, (240, 185, 40))
+        arcade.draw_text("▶   ¡JUGAR!", bcx, bcy,
+                         (45, 35, 5), int(max(H * 0.030, 18)),
+                         anchor_x="center", anchor_y="center", bold=True)
+
+        # ── Botón SALIR ──
+        l2, r2, b2, t2 = self._start_btn_quit
+        bw2, bh2 = r2 - l2, t2 - b2
+        bcx2, bcy2 = (l2 + r2) / 2, (b2 + t2) / 2
+        _rr_fill(bcx2, bcy2, bw2, bh2, bh2 / 2, (155, 160, 175))
+        arcade.draw_text("→   SALIR", bcx2, bcy2,
+                         (255, 255, 255), int(max(H * 0.026, 16)),
+                         anchor_x="center", anchor_y="center", bold=True)
+
+        # ── Detalles decorativos ──
+        # Corazón rosa
+        arcade.draw_text("♥", W * 0.22, H * 0.86,
+                         (240, 130, 160), int(max(H * 0.036, 22)))
+        # Estrella dorada
+        arcade.draw_text("★", W * 0.72, H * 0.12,
+                         (230, 185, 60), int(max(H * 0.042, 26)))
 
     def draw_menu(self):
         W, H = self.width, self.height
@@ -555,10 +629,12 @@ class GrammarGame(arcade.Window):
             self.set_fullscreen(not self.fullscreen)
             return
 
-        # START -> MENU
+        # START -> MENU o SALIR
         if self.current_state == STATE_START:
             if key in (arcade.key.KEY_1, arcade.key.ENTER):
                 self.current_state = STATE_MENU
+            elif key == arcade.key.ESCAPE:
+                arcade.exit()
             return
 
         if self.current_state == STATE_MENU:
@@ -584,6 +660,14 @@ class GrammarGame(arcade.Window):
                 self.check_collision(lane_pressed)
 
     def on_mouse_press(self, x, y, button, modifiers):
+        # Pantalla de inicio
+        if self.current_state == STATE_START:
+            if self._start_btn_play and self._point_in_rect(x, y, self._start_btn_play):
+                self.current_state = STATE_MENU
+            elif self._start_btn_quit and self._point_in_rect(x, y, self._start_btn_quit):
+                arcade.exit()
+            return
+
         if self.current_state != STATE_MENU:
             return
 
