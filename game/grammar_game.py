@@ -558,7 +558,7 @@ class GrammarGame(arcade.Window):
         bw = max(int(W * 0.13), 155)
         bh = max(int(H * 0.058), 44)
         gap = max(int(W * 0.02), 16)
-        y_btn = H * 0.22
+        y_btn = H * 0.16
         self._result_btn_back  = (cx - gap/2 - bw, cx - gap/2,      y_btn - bh/2, y_btn + bh/2)
         self._result_btn_retry = (cx + gap/2,       cx + gap/2 + bw, y_btn - bh/2, y_btn + bh/2)
 
@@ -583,7 +583,7 @@ class GrammarGame(arcade.Window):
         # ── Card blanca central ──
         card_w = min(W * 0.50, 560)
         card_h = H * 0.52
-        card_cy = H * 0.55
+        card_cy = H * 0.48
         _rr_fill(cx, card_cy, card_w, card_h, 22, (255, 255, 255, 240))
 
         # Puntaje grande
