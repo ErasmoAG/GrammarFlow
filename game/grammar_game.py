@@ -87,6 +87,11 @@ class GrammarGame(arcade.Window):
         self.flash_alpha = 0
         self.flash_color = arcade.color.GREEN
 
+        # ── Efectos visuales de combo ──
+        self.combo_tier    = 0
+        self.pulse_t       = 0.0
+        self.ambient_timer = 0
+
         # Screen shake
         self.shake_frames = 0       # frames restantes de shake
         self.shake_magnitude = 8    # píxeles máx de desplazamiento
@@ -142,6 +147,15 @@ class GrammarGame(arcade.Window):
         self.hitbox_height = self.base_hitbox_height * settings.hitbox_scale
         self.lives = settings.lives
 
+    def _update_combo_tier(self):
+        """Actualiza el tier visual segun el combo actual."""
+        if self.combo >= 6:
+            self.combo_tier = 2
+        elif self.combo >= 3:
+            self.combo_tier = 1
+        else:
+            self.combo_tier = 0
+
     def _update_speed_by_combo(self):
         """
         Recalcula fall_speed según dificultad + combo actual.
@@ -174,6 +188,9 @@ class GrammarGame(arcade.Window):
         self.current_wave_idx = 0
         self.score = 0
         self.combo = 0
+        self.combo_tier    = 0
+        self.pulse_t       = 0.0
+        self.ambient_timer = 0
         self.hits      = 0
         self.errors    = 0
         self.max_combo = 0
@@ -432,17 +449,30 @@ class GrammarGame(arcade.Window):
 
         lane_width = W / LANES
 
+        # ── 0. Efectos visuales de combo tier ──
+        if self.combo_tier == 1:
+            # Tier 1: tinte cyan suave pulsante
+            tint_a = int(30 + 15 * math.sin(self.pulse_t))
+            arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (60, 200, 230, tint_a))
+        elif self.combo_tier == 2:
+            # Tier 2: mismo cyan, pulso más lento
+            tint_a = int(32 + 14 * math.sin(self.pulse_t))
+            arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (60, 200, 230, tint_a))
+
         # ── 1. Separadores de carriles + tinte de color por carril ──
         from game.falling_word import LANE_COLORS, LANE_LETTERS
+        lane_line_w = 5 if self.combo_tier == 2 else (3 if self.combo_tier == 1 else 1)
+        lane_line_alpha = int(180 + 70 * abs(math.sin(self.pulse_t))) if self.combo_tier > 0 else 120
         for i in range(1, LANES):
             x = i * lane_width + ox
-            arcade.draw_line(x, oy, x, H + oy, (200, 200, 215, 120), 1)
+            arcade.draw_line(x, oy, x, H + oy, (200, 200, 215, lane_line_alpha), lane_line_w)
 
+        lane_tint = int(18 + 22 * abs(math.sin(self.pulse_t))) if self.combo_tier == 2 else (12 if self.combo_tier == 1 else 18)
         for lane in range(1, LANES + 1):
             color = LANE_COLORS[lane]
             lx0 = (lane - 1) * lane_width + ox
             lx1 = lane * lane_width + ox
-            arcade.draw_lrbt_rectangle_filled(lx0, lx1, oy, H + oy, (*color, 18))
+            arcade.draw_lrbt_rectangle_filled(lx0, lx1, oy, H + oy, (*color, lane_tint))
 
         # ── 2. UI superior — textos cacheados ──
         if self.current_sentence_idx < len(self.current_sentences):
@@ -648,11 +678,20 @@ class GrammarGame(arcade.Window):
         if self.flash_alpha > 0:
             self.flash_alpha -= 10
 
-        # Decaer shake
         if self.shake_frames > 0:
             self.shake_frames -= 1
 
-        # Actualizar partículas
+        # Pulso oscilante para efectos de tier
+        self.pulse_t = (self.pulse_t + 0.14) % (2 * math.pi)
+
+        # Partículas ambientales según tier
+        if self.current_state == STATE_GAME and self.combo_tier > 0:
+            self.ambient_timer += 1
+            spawn_rate = 3 if self.combo_tier == 2 else 5
+            if self.ambient_timer >= spawn_rate:
+                self.ambient_timer = 0
+                self.particle_system.spawn_ambient(self.combo_tier, self.width, self.height)
+
         self.particle_system.update()
 
         if self.current_state != STATE_GAME:
@@ -671,6 +710,7 @@ class GrammarGame(arcade.Window):
             self.errors += 1
             self.combo = self.combo // 2
             self._update_speed_by_combo()
+            self._update_combo_tier()
             self.trigger_flash(is_success=False)
             self.trigger_shake()
             if self.lives <= 0:
@@ -776,6 +816,7 @@ class GrammarGame(arcade.Window):
                         self.errors += 1
                         self.combo = self.combo // 2
                         self._update_speed_by_combo()
+                        self._update_combo_tier()
                         self.trigger_flash(is_success=False)
                         self.trigger_shake()
                         if self.lives <= 0:
@@ -790,6 +831,7 @@ class GrammarGame(arcade.Window):
             self.errors += 1
             self.combo = self.combo // 2
             self._update_speed_by_combo()
+            self._update_combo_tier()
             self.trigger_flash(is_success=False)
             self.trigger_shake()
             if self.lives <= 0:
@@ -809,6 +851,7 @@ class GrammarGame(arcade.Window):
             bonus = 50 * self.combo
             self.score += bonus
             self._update_speed_by_combo()
+            self._update_combo_tier()
             if self.combo > self.max_combo:
                 self.max_combo = self.combo
 
