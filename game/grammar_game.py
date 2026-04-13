@@ -70,6 +70,7 @@ class GrammarGame(arcade.Window):
         self.combo = 0
         self.lives = 6
         self.constructed_sentence = ""
+        self.sentence_preview_timer = 0.0   # segundos restantes de preview
 
         # ── Tracking de partida ──
         self.hits      = 0   # fases correctas
@@ -196,6 +197,7 @@ class GrammarGame(arcade.Window):
         self.max_combo = 0
         # self.lives ya fue seteado por apply_difficulty_settings() al inicio de setup_game
         self.constructed_sentence = ""
+        self.sentence_preview_timer = 0.0
         self.word_list = arcade.SpriteList()
         self.particle_system.clear()
 
@@ -216,7 +218,14 @@ class GrammarGame(arcade.Window):
 
         if self.current_wave_idx == 0:
             self.constructed_sentence = ""
+            # ── Preview de oración nueva: 2 segundos antes de spawnear ──
+            self.sentence_preview_timer = 2.0
+            return  # las palabras se spawnean cuando el timer llega a 0
 
+        self._do_spawn_wave()
+
+    def _do_spawn_wave(self):
+        """Spawea las palabras del wave actual."""
         sentence = self.current_sentences[self.current_sentence_idx]
         wave = sentence["waves"][self.current_wave_idx]
 
@@ -226,13 +235,9 @@ class GrammarGame(arcade.Window):
 
         random.shuffle(options)
 
-        # Crea exactamente 4 palabras (una por carril)
         for i, option in enumerate(options):
             word = FallingWord(option["text"], i + 1, option["correct"])
-
-            # ✅ Velocidad real según dificultad
             word.change_y = -self.fall_speed
-
             self.word_list.append(word)
 
     # -------------------------
@@ -338,7 +343,7 @@ class GrammarGame(arcade.Window):
 
         # Subtítulo
         arcade.draw_text(
-            "Master English at the rhythm of the game",
+            "Domina el inglés al ritmo del juego",
             cx, title_y - title_size - 8,
             (100, 110, 135), int(max(H * 0.024, 14)),
             anchor_x="center"
@@ -372,7 +377,7 @@ class GrammarGame(arcade.Window):
         bw, bh = r - l, t - b
         bcx, bcy = (l + r) / 2, (b + t) / 2
         _rr_fill(bcx, bcy, bw, bh, bh / 2, (240, 185, 40))
-        arcade.draw_text("▶   PLAY!", bcx, bcy,
+        arcade.draw_text("▶   ¡JUGAR!", bcx, bcy,
                          (45, 35, 5), int(max(H * 0.030, 18)),
                          anchor_x="center", anchor_y="center", bold=True)
 
@@ -382,7 +387,7 @@ class GrammarGame(arcade.Window):
         bh2 = (t2 - b2) * 0.78
         bcx2, bcy2 = (l2 + r2) / 2, (b2 + t2) / 2
         _rr_fill(bcx2, bcy2, bw2, bh2, bh2 / 2, (155, 160, 175))
-        arcade.draw_text("→  QUIT", bcx2, bcy2,
+        arcade.draw_text("→  SALIR", bcx2, bcy2,
                          (255, 255, 255), int(max(H * 0.022, 13)),
                          anchor_x="center", anchor_y="center", bold=True)
 
@@ -413,7 +418,7 @@ class GrammarGame(arcade.Window):
                          (70, 145, 215), title_size, bold=True)
 
         arcade.draw_text(
-            "GAME SETTINGS",
+            "CONFIGURACIÓN DE PARTIDA",
             cx, title_y - title_size - 6,
             (175, 178, 192), int(max(H * 0.018, 11)),
             anchor_x="center"
@@ -428,7 +433,7 @@ class GrammarGame(arcade.Window):
         loff  = int(max(H * 0.044, 28))
         gray  = (110, 113, 130)
 
-        for label, y in [("DIFFICULTY", y_diff), ("TENSE", y_tense), ("TOPIC", y_theme)]:
+        for label, y in [("DIFICULTAD", y_diff), ("TIEMPO GRAMATICAL", y_tense), ("TEMA", y_theme)]:
             arcade.draw_text(label, cx, y + loff, gray, lsize, anchor_x="center", bold=True)
 
         for btn in self.menu_buttons:
@@ -437,7 +442,7 @@ class GrammarGame(arcade.Window):
         self._draw_start_button()
 
         arcade.draw_text(
-            "Available: Easy/Normal • Present • Food / Waste sorting",
+            "Disponible: Fácil/Normal • Presente • Comida / Separación de residuos",
             cx, card_cy - card_h / 2 + 14,
             (185, 188, 200), int(max(H * 0.015, 10)),
             anchor_x="center"
@@ -456,8 +461,8 @@ class GrammarGame(arcade.Window):
             arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (60, 200, 230, tint_a))
         elif self.combo_tier == 2:
             # Tier 2: igual que tier 1 pero amarillo/dorado suave
-            tint_a = int(35 + 18 * math.sin(self.pulse_t))
-            arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (255, 210, 60, tint_a))
+            tint_a = int(32 + 18 * math.sin(self.pulse_t))
+            arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (60, 200, 230, tint_a))
 
         # ── 1. Separadores de carriles + tinte de color por carril ──
         from game.falling_word import LANE_COLORS, LANE_LETTERS
@@ -477,14 +482,14 @@ class GrammarGame(arcade.Window):
         # ── 2. UI superior — textos cacheados ──
         if self.current_sentence_idx < len(self.current_sentences):
             sentence_data = self.current_sentences[self.current_sentence_idx]
-            self._txt_spanish.text  = f"Spanish: {sentence_data['spanish']}"
-            self._txt_english.text  = f"English: {self.constructed_sentence} ..."
+            self._txt_spanish.text  = f"Español: {sentence_data['spanish']}"
+            self._txt_english.text  = f"Inglés: {self.constructed_sentence} ..."
             self._txt_spanish.x = 20 + ox;  self._txt_spanish.y = H - 40 + oy
             self._txt_english.x = 20 + ox;  self._txt_english.y = H - 70 + oy
             self._txt_spanish.draw()
             self._txt_english.draw()
 
-        self._txt_score.text = f"Score: {self.score}"
+        self._txt_score.text = f"Puntaje: {self.score}"
         self._txt_score.x = W - 220 + ox
         self._txt_score.y = H - 40 + oy
         self._txt_score.draw()
@@ -509,7 +514,7 @@ class GrammarGame(arcade.Window):
         self._txt_combo.y = H - 70 + oy
         self._txt_combo.draw()
 
-        self._txt_lives.text = "Lives: " + "❤" * self.lives
+        self._txt_lives.text = "Vidas: " + "❤" * self.lives
         self._txt_lives.x = 20 + ox
         self._txt_lives.y = H - 105 + oy
         self._txt_lives.draw()
@@ -582,6 +587,58 @@ class GrammarGame(arcade.Window):
         # ── 6. Partículas ──
         self.particle_system.draw()
 
+        # ── 7. Preview overlay: oración grande durante countdown ──
+        if self.sentence_preview_timer > 0 and self.current_sentence_idx < len(self.current_sentences):
+            self._draw_sentence_preview(W, H)
+
+    def _draw_sentence_preview(self, W, H):
+        """Muestra la oración en grande centrada con barra de countdown."""
+        sentence_data = self.current_sentences[self.current_sentence_idx]
+        spanish_text  = sentence_data['spanish']
+        cx, cy = W / 2, H / 2
+
+        # Fondo semitransparente oscuro
+        arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (20, 25, 50, 160))
+
+        # Card central
+        card_w = min(W * 0.65, 750)
+        card_h = max(int(H * 0.28), 180)
+        _rr_fill(cx, cy, card_w, card_h, 20, (255, 255, 255, 235))
+
+        # Label pequeño arriba
+        arcade.draw_text(
+            "TRANSLATE THIS SENTENCE",
+            cx, cy + card_h * 0.36,
+            (130, 140, 170), int(max(H * 0.018, 12)),
+            anchor_x="center", bold=True
+        )
+
+        # Oración grande
+        font_size = int(max(H * 0.052, 30))
+        arcade.draw_text(
+            spanish_text,
+            cx, cy + card_h * 0.04,
+            (25, 35, 75), font_size,
+            anchor_x="center", anchor_y="center", bold=True
+        )
+
+        # Barra de countdown en la parte inferior de la card
+        bar_w = card_w * 0.80
+        bar_h = 8
+        bar_y = cy - card_h * 0.34
+        bar_x0 = cx - bar_w / 2
+        ratio  = self.sentence_preview_timer / 2.0  # 0..1
+        # Fondo gris
+        arcade.draw_lrbt_rectangle_filled(
+            bar_x0, bar_x0 + bar_w, bar_y - bar_h/2, bar_y + bar_h/2,
+            (210, 215, 225)
+        )
+        # Progreso cyan
+        arcade.draw_lrbt_rectangle_filled(
+            bar_x0, bar_x0 + bar_w * ratio, bar_y - bar_h/2, bar_y + bar_h/2,
+            (60, 200, 230)
+        )
+
     def _init_result_buttons(self):
         W, H = self.width, self.height
         cx = W / 2
@@ -600,13 +657,13 @@ class GrammarGame(arcade.Window):
         arcade.draw_text("GRAMMAR FLOW", cx, H * 0.88,
                          (25, 35, 75), int(max(H * 0.045, 26)),
                          anchor_x="center", bold=True)
-        arcade.draw_text("GAME OVER!", cx, H * 0.81,
+        arcade.draw_text("¡PARTIDA FINALIZADA!", cx, H * 0.81,
                          (255, 255, 255), int(max(H * 0.022, 13)),
                          anchor_x="center", bold=True)
         # Pill de subtítulo
         pill_w, pill_h = max(int(W * 0.22), 240), max(int(H * 0.038), 28)
         _rr_fill(cx, H * 0.81, pill_w, pill_h, pill_h / 2, (70, 140, 215))
-        arcade.draw_text("GAME OVER!", cx, H * 0.81,
+        arcade.draw_text("¡PARTIDA FINALIZADA!", cx, H * 0.81,
                          (255, 255, 255), int(max(H * 0.020, 12)),
                          anchor_x="center", anchor_y="center", bold=True)
 
@@ -617,7 +674,7 @@ class GrammarGame(arcade.Window):
         _rr_fill(cx, card_cy, card_w, card_h, 22, (255, 255, 255, 240))
 
         # Puntaje grande
-        arcade.draw_text("YOUR SCORE", cx, card_cy + card_h * 0.36,
+        arcade.draw_text("TU PUNTUACIÓN", cx, card_cy + card_h * 0.36,
                          (130, 135, 155), int(max(H * 0.018, 11)),
                          anchor_x="center", bold=True)
         arcade.draw_text(f"{self.score:,}", cx, card_cy + card_h * 0.18,
@@ -635,9 +692,9 @@ class GrammarGame(arcade.Window):
             cx + stat_w + stat_gap,
         ]
         stat_data = [
-            ("HITS", str(self.hits),      (50, 190, 100)),
-            ("ERRORS",  str(self.errors),     (220, 80, 90)),
-            ("MAX COMBO",f"x{self.max_combo}", (70, 140, 215)),
+            ("ACIERTOS", str(self.hits),      (50, 190, 100)),
+            ("ERRORES",  str(self.errors),     (220, 80, 90)),
+            ("COMBO MÁX",f"x{self.max_combo}", (70, 140, 215)),
         ]
         for (sx, (label, value, color)) in zip(positions, stat_data):
             _rr_fill(sx, stat_y, stat_w, stat_h, 12, (245, 246, 250))
@@ -657,7 +714,7 @@ class GrammarGame(arcade.Window):
             bcx, bcy = (l+r)/2, (b+t)/2
             bw, bh2 = r-l, t-b
             _rr_fill(bcx, bcy, bw, bh2, bh2/2, (155, 160, 175))
-            arcade.draw_text("◀  Menu", bcx, bcy,
+            arcade.draw_text("◀  Menú", bcx, bcy,
                              (255, 255, 255), 14,
                              anchor_x="center", anchor_y="center", bold=True)
 
@@ -667,7 +724,7 @@ class GrammarGame(arcade.Window):
             bcx, bcy = (l+r)/2, (b+t)/2
             bw, bh2 = r-l, t-b
             _rr_fill(bcx, bcy, bw, bh2, bh2/2, (240, 185, 40))
-            arcade.draw_text("Retry  ▶", bcx, bcy,
+            arcade.draw_text("Reiniciar  ▶", bcx, bcy,
                              (40, 30, 10), 14,
                              anchor_x="center", anchor_y="center", bold=True)
 
@@ -696,6 +753,14 @@ class GrammarGame(arcade.Window):
 
         if self.current_state != STATE_GAME:
             return
+
+        # ── Preview de oración: countdown antes de spawnear ──
+        if self.sentence_preview_timer > 0:
+            self.sentence_preview_timer -= delta_time
+            if self.sentence_preview_timer <= 0:
+                self.sentence_preview_timer = 0.0
+                self._do_spawn_wave()
+            return  # no actualizar palabras ni detectar misses durante preview
 
         self.word_list.update(delta_time)
 
@@ -743,6 +808,9 @@ class GrammarGame(arcade.Window):
                 self.current_state = STATE_MENU
 
         elif self.current_state == STATE_GAME:
+            # No aceptar input durante el preview de oración
+            if self.sentence_preview_timer > 0:
+                return
             lane_pressed = 0
             if key == arcade.key.KEY_1:
                 lane_pressed = 1
@@ -902,25 +970,25 @@ class GrammarGame(arcade.Window):
         self.menu_y["theme"]      = y_theme
 
         diff_items = [
-            {"id": "facil",   "label": "Easy",   "enabled": True},
+            {"id": "facil",   "label": "Fácil",   "enabled": True},
             {"id": "normal",  "label": "Normal",  "enabled": True},
-            {"id": "dificil", "label": "Hard", "enabled": False},
+            {"id": "dificil", "label": "Difícil", "enabled": False},
         ]
         self._add_row_buttons("difficulty", diff_items, y_diff, w_diff, h_pill, gap,
                               cx - (3 * w_diff + 2 * gap) / 2)
 
         tense_items = [
-            {"id": "presente_simple", "label": "Present", "enabled": True},
-            {"id": "pasado",          "label": "Past",   "enabled": False},
-            {"id": "futuro",          "label": "Future",   "enabled": False},
+            {"id": "presente_simple", "label": "Presente", "enabled": True},
+            {"id": "pasado",          "label": "Pasado",   "enabled": False},
+            {"id": "futuro",          "label": "Futuro",   "enabled": False},
         ]
         self._add_row_buttons("tense", tense_items, y_tense, w_big, h_card, gap,
                               cx - (3 * w_big + 2 * gap) / 2)
 
         theme_items = [
-            {"id": "comida",             "label": "Food",                 "enabled": True},
-            {"id": "separacion_residuos","label": "Waste sorting",          "enabled": True},
-            {"id": "viajes",             "label": "Travel",                 "enabled": False},
+            {"id": "comida",             "label": "Comida",                 "enabled": True},
+            {"id": "separacion_residuos","label": "Sep. residuos",          "enabled": True},
+            {"id": "viajes",             "label": "Viajes",                 "enabled": False},
         ]
         self._add_row_buttons("theme", theme_items, y_theme, w_big, h_card, gap,
                               cx - (3 * w_big + 2 * gap) / 2)
@@ -943,7 +1011,7 @@ class GrammarGame(arcade.Window):
         r = cx + btn_gap / 2 + w_start
         b = y_start - h_start / 2
         t = y_start + h_start / 2
-        self.start_button = {"rect": (l, r, b, t), "label": "START!"}
+        self.start_button = {"rect": (l, r, b, t), "label": "¡EMPEZAR!"}
 
     def _add_row_buttons(self, group, items, y, w, h, gap, start_x):
         x = start_x
@@ -1033,7 +1101,7 @@ class GrammarGame(arcade.Window):
             w2 = r - l;          h2 = t - b
             _rr_fill(cx2, cy2, w2, h2, h2 / 2, (155, 160, 175))
             arcade.draw_text(
-                "◀  Menu", cx2, cy2,
+                "◀  Menú", cx2, cy2,
                 (255, 255, 255), 15,
                 anchor_x="center", anchor_y="center", bold=True
             )
@@ -1045,7 +1113,7 @@ class GrammarGame(arcade.Window):
             w  = r - l;         h  = t - b
             _rr_fill(cx, cy, w, h, h / 2, (240, 185, 40))
             arcade.draw_text(
-                "START!  ▶", cx, cy,
+                "¡EMPEZAR!  ▶", cx, cy,
                 (40, 30, 10), 15,
                 anchor_x="center", anchor_y="center", bold=True
             )
