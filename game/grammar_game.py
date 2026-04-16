@@ -37,6 +37,7 @@ def _rr_border(cx, cy, w, h, r, border_color, lw=2):
     _rr_fill(cx, cy, w, h, r, (255, 255, 255))
 from game.difficulty import get_difficulty_settings
 from game.particles import ParticleSystem
+from game.tutorial import TutorialManager
 
 
 class GrammarGame(arcade.Window):
@@ -70,7 +71,7 @@ class GrammarGame(arcade.Window):
         self.combo = 0
         self.lives = 6
         self.constructed_sentence = ""
-        self.sentence_preview_timer = 0.0   # segundos restantes de preview
+        self.sentence_preview_timer = 0.0
 
         # ── Tracking de partida ──
         self.hits      = 0   # fases correctas
@@ -101,6 +102,7 @@ class GrammarGame(arcade.Window):
 
         # Partículas
         self.particle_system = ParticleSystem()
+        self.tutorial = TutorialManager()
 
         # --- MENU CONFIG ---
         self.selected_difficulty = "facil"          # ids de UI
@@ -218,9 +220,9 @@ class GrammarGame(arcade.Window):
 
         if self.current_wave_idx == 0:
             self.constructed_sentence = ""
-            # ── Preview de oración nueva: 2 segundos antes de spawnear ──
+            # Preview de 2 segundos al inicio de cada oración nueva
             self.sentence_preview_timer = 2.0
-            return  # las palabras se spawnean cuando el timer llega a 0
+            return  # palabras se spawnean cuando el timer llega a 0
 
         self._do_spawn_wave()
 
@@ -270,6 +272,10 @@ class GrammarGame(arcade.Window):
         if self.flash_alpha > 0:
             safe_color = (*self.flash_color[:3], int(self.flash_alpha))
             arcade.draw_lrbt_rectangle_filled(0, self.width, 0, self.height, safe_color)
+
+        # Tutorial overlay — siempre encima de todo
+        if self.tutorial.active:
+            self.tutorial.draw(self.width, self.height, HITBOX_Y, self.hitbox_height)
 
     def _build_gradient_bg(self):
         """
@@ -460,8 +466,8 @@ class GrammarGame(arcade.Window):
             tint_a = int(30 + 15 * math.sin(self.pulse_t))
             arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (60, 200, 230, tint_a))
         elif self.combo_tier == 2:
-            # Tier 2: igual que tier 1 pero amarillo/dorado suave
-            tint_a = int(32 + 18 * math.sin(self.pulse_t))
+            # Tier 2: mismo cyan que tier 1, diferencia está en partículas
+            tint_a = int(32 + 14 * math.sin(self.pulse_t))
             arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (60, 200, 230, tint_a))
 
         # ── 1. Separadores de carriles + tinte de color por carril ──
@@ -587,53 +593,49 @@ class GrammarGame(arcade.Window):
         # ── 6. Partículas ──
         self.particle_system.draw()
 
-        # ── 7. Preview overlay: oración grande durante countdown ──
+        # ── 7. Preview overlay ──
         if self.sentence_preview_timer > 0 and self.current_sentence_idx < len(self.current_sentences):
             self._draw_sentence_preview(W, H)
 
     def _draw_sentence_preview(self, W, H):
-        """Muestra la oración en grande centrada con barra de countdown."""
+        """Oración en grande centrada con barra de countdown."""
         sentence_data = self.current_sentences[self.current_sentence_idx]
-        spanish_text  = sentence_data['spanish']
         cx, cy = W / 2, H / 2
 
-        # Fondo semitransparente oscuro
-        arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (20, 25, 50, 160))
+        # Fondo semitransparente
+        arcade.draw_lrbt_rectangle_filled(0, W, 0, H, (20, 25, 50, 170))
 
-        # Card central
-        card_w = min(W * 0.65, 750)
+        # Card blanca central
+        card_w = min(W * 0.62, 700)
         card_h = max(int(H * 0.28), 180)
-        _rr_fill(cx, cy, card_w, card_h, 20, (255, 255, 255, 235))
+        _rr_fill(cx, cy, card_w, card_h, 20, (255, 255, 255, 240))
 
-        # Label pequeño arriba
+        # Label pequeño
         arcade.draw_text(
             "TRANSLATE THIS SENTENCE",
             cx, cy + card_h * 0.36,
-            (130, 140, 170), int(max(H * 0.018, 12)),
+            (130, 140, 170), int(max(H * 0.016, 11)),
             anchor_x="center", bold=True
         )
 
         # Oración grande
-        font_size = int(max(H * 0.052, 30))
         arcade.draw_text(
-            spanish_text,
-            cx, cy + card_h * 0.04,
-            (25, 35, 75), font_size,
+            sentence_data['spanish'],
+            cx, cy + card_h * 0.05,
+            (25, 35, 75), int(max(H * 0.050, 28)),
             anchor_x="center", anchor_y="center", bold=True
         )
 
-        # Barra de countdown en la parte inferior de la card
-        bar_w = card_w * 0.80
-        bar_h = 8
-        bar_y = cy - card_h * 0.34
+        # Barra de countdown cyan
+        bar_w  = card_w * 0.78
+        bar_h  = 8
+        bar_y  = cy - card_h * 0.34
         bar_x0 = cx - bar_w / 2
-        ratio  = self.sentence_preview_timer / 2.0  # 0..1
-        # Fondo gris
+        ratio  = self.sentence_preview_timer / 2.0
         arcade.draw_lrbt_rectangle_filled(
             bar_x0, bar_x0 + bar_w, bar_y - bar_h/2, bar_y + bar_h/2,
             (210, 215, 225)
         )
-        # Progreso cyan
         arcade.draw_lrbt_rectangle_filled(
             bar_x0, bar_x0 + bar_w * ratio, bar_y - bar_h/2, bar_y + bar_h/2,
             (60, 200, 230)
@@ -754,13 +756,13 @@ class GrammarGame(arcade.Window):
         if self.current_state != STATE_GAME:
             return
 
-        # ── Preview de oración: countdown antes de spawnear ──
+        # Preview countdown antes de spawnear palabras
         if self.sentence_preview_timer > 0:
             self.sentence_preview_timer -= delta_time
             if self.sentence_preview_timer <= 0:
                 self.sentence_preview_timer = 0.0
                 self._do_spawn_wave()
-            return  # no actualizar palabras ni detectar misses durante preview
+            return  # no actualizar palabras durante preview
 
         self.word_list.update(delta_time)
 
@@ -789,10 +791,19 @@ class GrammarGame(arcade.Window):
             self.set_fullscreen(not self.fullscreen)
             return
 
+        # Tutorial intercepta input si está activo
+        if self.tutorial.active:
+            self.tutorial.on_key_press(key)
+            return
+
         # START -> MENU o SALIR
         if self.current_state == STATE_START:
             if key in (arcade.key.KEY_1, arcade.key.ENTER):
-                self.current_state = STATE_MENU
+                if self.tutorial.should_show():
+                    self.tutorial.start()
+                    self.current_state = STATE_MENU
+                else:
+                    self.current_state = STATE_MENU
             elif key == arcade.key.ESCAPE:
                 arcade.exit()
             return
@@ -808,7 +819,6 @@ class GrammarGame(arcade.Window):
                 self.current_state = STATE_MENU
 
         elif self.current_state == STATE_GAME:
-            # No aceptar input durante el preview de oración
             if self.sentence_preview_timer > 0:
                 return
             lane_pressed = 0
@@ -825,9 +835,16 @@ class GrammarGame(arcade.Window):
                 self.check_collision(lane_pressed)
 
     def on_mouse_press(self, x, y, button, modifiers):
+        # Tutorial intercepta mouse si está activo
+        if self.tutorial.active:
+            self.tutorial.on_mouse_press(x, y)
+            return
+
         # Pantalla de inicio
         if self.current_state == STATE_START:
             if self._start_btn_play and self._point_in_rect(x, y, self._start_btn_play):
+                if self.tutorial.should_show():
+                    self.tutorial.start()
                 self.current_state = STATE_MENU
             elif self._start_btn_quit and self._point_in_rect(x, y, self._start_btn_quit):
                 arcade.exit()
