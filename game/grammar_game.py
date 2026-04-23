@@ -693,7 +693,7 @@ class GrammarGame(arcade.Window):
         ]
         stat_data = [
             ("HITS", str(self.hits),      (50, 190, 100)),
-            ("ERRORs",  str(self.errors),     (220, 80, 90)),
+            ("ERRORS",  str(self.errors),     (220, 80, 90)),
             ("MAX COMBO",f"x{self.max_combo}", (70, 140, 215)),
         ]
         for (sx, (label, value, color)) in zip(positions, stat_data):
@@ -1113,7 +1113,7 @@ class GrammarGame(arcade.Window):
             w  = r - l;         h  = t - b
             _rr_fill(cx, cy, w, h, h / 2, (240, 185, 40))
             arcade.draw_text(
-                "¡STAR!  ▶", cx, cy,
+                "¡START!  ▶", cx, cy,
                 (40, 30, 10), 15,
                 anchor_x="center", anchor_y="center", bold=True
             )
