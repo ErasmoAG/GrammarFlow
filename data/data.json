@@ -1003,7 +1003,425 @@
       {"correct": "glass", "distractors": ["plastic", "paper", "metal"]},
       {"correct": "every day", "distractors": ["today", "yesterday", "tomorrow"]}
     ]
+  },
+
+
+  {
+    "id": 401,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ↑ - ↓ - ↑ - ...",
+    "waves": [
+      {"correct": "↓", "distractors": ["↑", "←", "→"]}
+    ]
+  },
+  {
+    "id": 402,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ● - ■ - ● - ...",
+    "waves": [
+      {"correct": "■", "distractors": ["●", "▲", "★"]}
+    ]
+  },
+  {
+    "id": 403,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: → - → - ← - ...",
+    "waves": [
+      {"correct": "←", "distractors": ["→", "↑", "↓"]}
+    ]
+  },
+  {
+    "id": 404,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ▲ - ▼ - ▲ - ...",
+    "waves": [
+      {"correct": "▼", "distractors": ["▲", "◀", "▶"]}
+    ]
+  },
+  {
+    "id": 405,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ★ - ★ - ● - ...",
+    "waves": [
+      {"correct": "●", "distractors": ["★", "■", "▲"]}
+    ]
+  },
+  {
+    "id": 406,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ← - ↓ - → - ...",
+    "waves": [
+      {"correct": "↑", "distractors": ["↓", "←", "→"]}
+    ]
+  },
+  {
+    "id": 407,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ✚ - ✖ - ✚ - ...",
+    "waves": [
+      {"correct": "✖", "distractors": ["✚", "●", "■"]}
+    ]
+  },
+  {
+    "id": 408,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ● - ● - ■ - ...",
+    "waves": [
+      {"correct": "■", "distractors": ["●", "★", "▲"]}
+    ]
+  },
+  {
+    "id": 409,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ↑ - ↑ - ↑ - ...",
+    "waves": [
+      {"correct": "↓", "distractors": ["↑", "←", "→"]}
+    ]
+  },
+  {
+    "id": 410,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ■ - ▲ - ● - ...",
+    "waves": [
+      {"correct": "■", "distractors": ["▲", "●", "★"]}
+    ]
+  },
+  {
+    "id": 411,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: → - ↓ - ← - ...",
+    "waves": [
+      {"correct": "↑", "distractors": ["↓", "→", "←"]}
+    ]
+  },
+  {
+    "id": 412,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ◆ - ◇ - ◆ - ...",
+    "waves": [
+      {"correct": "◇", "distractors": ["◆", "●", "■"]}
+    ]
+  },
+  {
+    "id": 413,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ◀ - ◀ - ▶ - ...",
+    "waves": [
+      {"correct": "▶", "distractors": ["◀", "▲", "▼"]}
+    ]
+  },
+  {
+    "id": 414,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ● - ★ - ● - ...",
+    "waves": [
+      {"correct": "★", "distractors": ["●", "■", "▲"]}
+    ]
+  },
+  {
+    "id": 415,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ↓ - ↓ - ↓ - ...",
+    "waves": [
+      {"correct": "↑", "distractors": ["↓", "←", "→"]}
+    ]
+  },
+  {
+    "id": 416,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ■ - ■ - □ - ...",
+    "waves": [
+      {"correct": "□", "distractors": ["■", "●", "○"]}
+    ]
+  },
+  {
+    "id": 417,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ← - → - ← - ...",
+    "waves": [
+      {"correct": "→", "distractors": ["←", "↑", "↓"]}
+    ]
+  },
+  {
+    "id": 418,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ▲ - ■ - ▲ - ...",
+    "waves": [
+      {"correct": "■", "distractors": ["▲", "●", "★"]}
+    ]
+  },
+  {
+    "id": 419,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ↑ - → - ↓ - ...",
+    "waves": [
+      {"correct": "←", "distractors": ["↑", "→", "↓"]}
+    ]
+  },
+  {
+    "id": 420,
+    "category": "psicologia",
+    "difficulty": "facil",
+    "tense": "secuencia",
+    "spanish": "Serie: ● - ● - ● - ...",
+    "waves": [
+      {"correct": "■", "distractors": ["●", "▲", "★"]}
+    ]
+  },
+
+
+
+  
+  {
+    "id": 501,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ↖ - ↗ - ↘ - ...",
+    "waves": [
+      {"correct": "↙", "distractors": ["↖", "↑", "↓"]},
+      {"correct": "↖", "distractors": ["↗", "↘", "↙"]}
+    ]
+  },
+  {
+    "id": 502,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ○ - ● - ○ - ...",
+    "waves": [
+      {"correct": "●", "distractors": ["○", "■", "□"]},
+      {"correct": "○", "distractors": ["●", "■", "□"]}
+    ]
+  },
+  {
+    "id": 503,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ★ - ★★ - ★★★ - ...",
+    "waves": [
+      {"correct": "★★★★", "distractors": ["★★★", "★★★★★", "★★"]},
+      {"correct": "★★★★★", "distractors": ["★★★★", "★★★★★★", "★"]}
+    ]
+  },
+  {
+    "id": 504,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: 1↑ - 2↓ - 3↑ - ...",
+    "waves": [
+      {"correct": "4↓", "distractors": ["4↑", "5↓", "3↓"]},
+      {"correct": "5↑", "distractors": ["5↓", "6↑", "4↑"]}
+    ]
+  },
+  {
+    "id": 505,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ▲ - ■ - ● - ▲ - ...",
+    "waves": [
+      {"correct": "■", "distractors": ["▲", "●", "★"]},
+      {"correct": "●", "distractors": ["■", "▲", "★"]}
+    ]
+  },
+  {
+    "id": 506,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ⚋ - ⚊ - ⚋ - ...",
+    "waves": [
+      {"correct": "⚊", "distractors": ["⚋", "☰", "☱"]},
+      {"correct": "⚋", "distractors": ["⚊", "☰", "☲"]}
+    ]
+  },
+  {
+    "id": 507,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ◤ - ◥ - ◢ - ...",
+    "waves": [
+      {"correct": "◣", "distractors": ["◤", "◥", "◢"]},
+      {"correct": "◤", "distractors": ["◣", "◥", "◢"]}
+    ]
+  },
+  {
+    "id": 508,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ⬖ - ⬗ - ⬘ - ...",
+    "waves": [
+      {"correct": "⬙", "distractors": ["⬖", "⬗", "⬘"]},
+      {"correct": "⬖", "distractors": ["⬙", "⬗", "⬘"]}
+    ]
+  },
+  {
+    "id": 509,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: 1● - 1■ - 2● - ...",
+    "waves": [
+      {"correct": "2■", "distractors": ["1■", "2●", "3■"]},
+      {"correct": "3●", "distractors": ["3■", "2■", "4●"]}
+    ]
+  },
+  {
+    "id": 511,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ◒ - ◓ - ◒ - ...",
+    "waves": [
+      {"correct": "◓", "distractors": ["◒", "◐", "◑"]},
+      {"correct": "◒", "distractors": ["◓", "◐", "◑"]}
+    ]
+  },
+  {
+    "id": 512,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: [ ● ] - [ ■ ] - [ ● ] - ...",
+    "waves": [
+      {"correct": "[ ■ ]", "distractors": ["[ ● ]", "[ ▲ ]", "[ ★ ]"]},
+      {"correct": "[ ● ]", "distractors": ["[ ■ ]", "[ ▲ ]", "[ ★ ]"]}
+    ]
+  },
+  {
+    "id": 513,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ⇈ - ⇊ - ⇈ - ...",
+    "waves": [
+      {"correct": "⇊", "distractors": ["⇈", "⇉", "⇇"]},
+      {"correct": "⇈", "distractors": ["⇊", "⇉", "⇇"]}
+    ]
+  },
+  {
+    "id": 514,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ◖ - ◗ - ◖ - ...",
+    "waves": [
+      {"correct": "◗", "distractors": ["◖", "▲", "▼"]},
+      {"correct": "◖", "distractors": ["◗", "▲", "▼"]}
+    ]
+  },
+  {
+    "id": 515,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: 1 - ↑ - 2 - ...",
+    "waves": [
+      {"correct": "↓", "distractors": ["↑", "3", "→"]},
+      {"correct": "3", "distractors": ["↑", "↓", "4"]}
+    ]
+  },
+  {
+    "id": 516,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ⬔ - ⬕ - ⬔ - ...",
+    "waves": [
+      {"correct": "⬕", "distractors": ["⬔", "■", "□"]},
+      {"correct": "⬔", "distractors": ["⬕", "■", "□"]}
+    ]
+  },
+  {
+    "id": 517,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ◀◀ - ◀ - ▶ - ...",
+    "waves": [
+      {"correct": "▶▶", "distractors": ["◀", "▶", "◀◀"]},
+      {"correct": "◀◀", "distractors": ["▶▶", "◀", "▶"]}
+    ]
+  },
+  {
+    "id": 518,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ⊞ - ⊟ - ⊠ - ...",
+    "waves": [
+      {"correct": "⊡", "distractors": ["⊞", "⊟", "⊠"]},
+      {"correct": "⊞", "distractors": ["⊡", "⊟", "⊠"]}
+    ]
+  },
+  {
+    "id": 519,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ◰ - ◳ - ◲ - ...",
+    "waves": [
+      {"correct": "◱", "distractors": ["◰", "◳", "◲"]},
+      {"correct": "◰", "distractors": ["◱", "◳", "◲"]}
+    ]
+  },
+  {
+    "id": 520,
+    "category": "psicologia",
+    "difficulty": "normal",
+    "tense": "secuencia",
+    "spanish": "Serie: ⚬ - ⚭ - ⚬ - ...",
+    "waves": [
+      {"correct": "⚭", "distractors": ["⚬", "⚮", "⚯"]},
+      {"correct": "⚬", "distractors": ["⚭", "⚮", "⚯"]}
+    ]
   }
+
+  
+  
 ]
 
 

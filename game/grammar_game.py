@@ -139,14 +139,18 @@ class GrammarGame(arcade.Window):
     # DIFFICULTY HELPERS
     # -------------------------
     def apply_difficulty_settings(self):
-        """
-        Aplica SOLO al iniciar la partida.
-        Delega completamente en difficulty.py como fuente de verdad.
-        """
-        settings = get_difficulty_settings(self.selected_difficulty)
-        self.fall_speed = self.base_fall_speed * settings.fall_speed_multiplier
-        self.hitbox_height = self.base_hitbox_height * settings.hitbox_scale
-        self.lives = settings.lives
+            settings = get_difficulty_settings(self.selected_difficulty)
+            
+            # Cargamos el multiplicador base de difficulty.py
+            multiplier = settings.fall_speed_multiplier
+            
+            # SI es psicología y es Normal, bajamos la velocidad un poco
+            if self.selected_theme == "psicologia" and self.selected_difficulty == "normal":
+                multiplier *= 0.75  # Esto baja el 1.70 original a un 1.27 aprox.
+                
+            self.fall_speed = self.base_fall_speed * multiplier
+            self.hitbox_height = self.base_hitbox_height * settings.hitbox_scale
+            self.lives = settings.lives
 
     def _update_combo_tier(self):
         """Actualiza el tier visual segun el combo actual."""
@@ -158,30 +162,39 @@ class GrammarGame(arcade.Window):
             self.combo_tier = 0
 
     def _update_speed_by_combo(self):
-        """
-        Recalcula fall_speed según dificultad + combo actual.
-        Incremento leve: +5% por nivel de combo sobre la velocidad base de dificultad.
-        Ej: combo 3 → ×1.15, combo 6 → ×1.30
-        """
-        settings = get_difficulty_settings(self.selected_difficulty)
-        base_speed = self.base_fall_speed * settings.fall_speed_multiplier
-        self.fall_speed = base_speed * (1 + self.combo * 0.05)
+            settings = get_difficulty_settings(self.selected_difficulty)
+            multiplier = settings.fall_speed_multiplier
+            
+            # Aplicamos el mismo freno que arriba
+            if self.selected_theme == "psicologia" and self.selected_difficulty == "normal":
+                multiplier *= 0.75
+                
+            base_speed = self.base_fall_speed * multiplier
+            # Mantenemos el incremento por combo pero sobre la base reducida
+            self.fall_speed = base_speed * (1 + self.combo * 0.05)
 
     # -------------------------
     # GAME FLOW
     # -------------------------
     def setup_game(self, tense, category):
-        # Aplicar dificultad SOLO cuando se inicia partida desde el menú
         self.apply_difficulty_settings()
-
         self.game_data = load_data()
 
-        self.current_sentences = [
-            s for s in self.game_data
-            if s.get("tense") == tense
-            and s.get("category") == category
-            and s.get("difficulty") == self.selected_difficulty
-        ]
+        # Si elegimos psicología, ignoramos el filtro de 'tense'
+        if category == "psicologia":
+            self.current_sentences = [
+                s for s in self.game_data
+                if s.get("category") == category
+                and s.get("difficulty") == self.selected_difficulty
+            ]
+        else:
+            # Filtro normal para inglés
+            self.current_sentences = [
+                s for s in self.game_data
+                if s.get("tense") == tense
+                and s.get("category") == category
+                and s.get("difficulty") == self.selected_difficulty
+            ]
 
         random.shuffle(self.current_sentences)
 
@@ -480,10 +493,19 @@ class GrammarGame(arcade.Window):
             arcade.draw_lrbt_rectangle_filled(lx0, lx1, oy, H + oy, (*color, lane_tint))
 
         # ── 2. UI superior — textos cacheados ──
+# ── 2. UI superior — textos dinámicos ──
         if self.current_sentence_idx < len(self.current_sentences):
             sentence_data = self.current_sentences[self.current_sentence_idx]
-            self._txt_spanish.text  = f"Spanish: {sentence_data['spanish']}"
-            self._txt_english.text  = f"English: {self.constructed_sentence} ..."
+            
+            # Si el tema es psicología, usamos etiquetas de patrones
+            if self.selected_theme == "psicologia":
+                self._txt_spanish.text = f"Patrón: {sentence_data['spanish']}"
+                self._txt_english.text = f"Serie: {self.constructed_sentence} ..."
+            else:
+                self._txt_spanish.text = f"Spanish: {sentence_data['spanish']}"
+                self._txt_english.text = f"English: {self.constructed_sentence} ..."
+            
+            # Mantener el resto igual para que la posición y el dibujo funcionen
             self._txt_spanish.x = 20 + ox;  self._txt_spanish.y = H - 40 + oy
             self._txt_english.x = 20 + ox;  self._txt_english.y = H - 70 + oy
             self._txt_spanish.draw()
@@ -605,9 +627,11 @@ class GrammarGame(arcade.Window):
         card_h = max(int(H * 0.28), 180)
         _rr_fill(cx, cy, card_w, card_h, 20, (255, 255, 255, 235))
 
-        # Label pequeño arriba
+        # Label pequeño arriba dinámico
+        instruccion = "COMPLETE THE PATTERN" if self.selected_theme == "psicologia" else "TRANSLATE THIS SENTENCE"
+        
         arcade.draw_text(
-            "TRANSLATE THIS SENTENCE",
+            instruccion,
             cx, cy + card_h * 0.36,
             (130, 140, 170), int(max(H * 0.018, 12)),
             anchor_x="center", bold=True
@@ -985,10 +1009,11 @@ class GrammarGame(arcade.Window):
         self._add_row_buttons("tense", tense_items, y_tense, w_big, h_card, gap,
                               cx - (3 * w_big + 2 * gap) / 2)
 
+        # Dentro de _init_menu_layout, actualiza la lista de temas:
         theme_items = [
-            {"id": "comida",             "label": "Food",                 "enabled": True},
-            {"id": "separacion_residuos","label": "Waste",          "enabled": True},
-            {"id": "viajes",             "label": "Travel",                 "enabled": False},
+            {"id": "comida",             "label": "Food",       "enabled": True},
+            {"id": "separacion_residuos","label": "Waste",      "enabled": True},
+            {"id": "psicologia",         "label": "Patterns",   "enabled": True}, # Agrega esta línea
         ]
         self._add_row_buttons("theme", theme_items, y_theme, w_big, h_card, gap,
                               cx - (3 * w_big + 2 * gap) / 2)
